@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.button.MaterialButton;
 import com.itsvks.layouteditor.managers.DrawableManager;
@@ -27,6 +28,34 @@ public class ViewCaller {
     target.requestLayout();
   }
 
+  public static void setLayoutMargin(View target, String value, Context context) {
+    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) target.getLayoutParams();
+    int v = Integer.parseInt(value);
+    params.topMargin = v;
+    params.bottomMargin = v;
+    params.leftMargin = v;
+    params.rightMargin = v;
+  }
+  public static void setLayoutMarginLeft(View target, String value, Context context) {
+    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) target.getLayoutParams();
+    int v = Integer.parseInt(value);
+    params.leftMargin = v;
+  }
+  public static void setLayoutMarginRight(View target, String value, Context context) {
+    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) target.getLayoutParams();
+    int v = Integer.parseInt(value);
+    params.rightMargin = v;
+  }
+  public static void setLayoutMarginBottom(View target, String value, Context context) {
+    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) target.getLayoutParams();
+    int v = Integer.parseInt(value);
+    params.bottomMargin = v;
+  }
+  public static void setLayoutMarginTop(View target, String value, Context context) {
+    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) target.getLayoutParams();
+    int v = Integer.parseInt(value);
+    params.topMargin = v;
+  }
   public static void setBackground(View target, String value, Context context) {
     if (ArgumentUtil.parseType(value, new String[] {"color", "drawable"})
         .equals(ArgumentUtil.COLOR)) {

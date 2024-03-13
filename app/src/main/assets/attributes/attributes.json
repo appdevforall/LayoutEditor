@@ -24,6 +24,41 @@
       "canDelete": "false"
     },
     {
+      "name": "android:layout_margin",
+      "methodName": "setLayoutMargin",
+      "className": "ViewCaller",
+      "attributeName": "android:layout_margin",
+      "argumentType": "int"
+    },
+    {
+      "name": "android:layout_marginLeft",
+      "methodName": "setLayoutMarginLeft",
+      "className": "ViewCaller",
+      "attributeName": "android:layout_marginLeft",
+      "argumentType": "int"
+    },
+    {
+      "name": "android:layout_marginRight",
+      "methodName": "setLayoutMarginRight",
+      "className": "ViewCaller",
+      "attributeName": "android:layout_marginRight",
+      "argumentType": "int"
+    },
+    {
+      "name": "android:layout_marginTop",
+      "methodName": "setLayoutMarginTop",
+      "className": "ViewCaller",
+      "attributeName": "android:layout_marginTop",
+      "argumentType": "int"
+    },
+    {
+      "name": "android:layout_marginBottom",
+      "methodName": "setLayoutMarginBottom",
+      "className": "ViewCaller",
+      "attributeName": "android:layout_marginBottom",
+      "argumentType": "int"
+    },
+    {
       "name": "android:alpha",
       "methodName": "setAlpha",
       "className": "ViewCaller",
