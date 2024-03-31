@@ -1,7 +1,7 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.android.gms.oss-licenses-plugin'
+//    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 android {
@@ -9,7 +9,7 @@ android {
     namespace "com.itsvks.layouteditor"
 
     defaultConfig {
-        applicationId "com.itsvks.layouteditor"
+        //applicationId "com.itsvks.layouteditor"
         minSdk 26
         targetSdk 34
         versionCode 6
@@ -30,9 +30,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-        }
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
+
+    }
         debug {
             signingConfig signingConfigs.release
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME", "\"${defaultConfig.versionName}\"")
         }
     }
 
