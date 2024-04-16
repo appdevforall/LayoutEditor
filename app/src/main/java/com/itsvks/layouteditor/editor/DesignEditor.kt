@@ -352,8 +352,12 @@ class DesignEditor : LinearLayout {
     if (xml.isEmpty()) return
 
     val parser = XmlLayoutParser(context)
-    parser.parseFromXml(xml, context)
-
+    try {
+      parser.parseFromXml(xml, context)
+    } catch (e : Exception) {
+      throw e
+    }
+    val root = parser.root
     addView(parser.root)
     viewAttributeMap = parser.viewAttributeMap
 

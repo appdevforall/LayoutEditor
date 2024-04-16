@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# For FitWindowsFrameLayout
+-keep public class androidx.appcompat.widget.FitWindowsFrameLayout
