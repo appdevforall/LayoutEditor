@@ -63,15 +63,20 @@ class XmlLayoutParser(context: Context) {
     try {
       val factory = XmlPullParserFactory.newInstance()
       val parser = factory.newPullParser()
+      var view : View
       parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
       parser.setInput(StringReader(xml))
 
       while (parser.eventType != XmlPullParser.END_DOCUMENT) {
         when (parser.eventType) {
           XmlPullParser.START_TAG -> {
-            val view = createView(parser.name, context) as View
-            listViews.add(view)
-
+            val result = createView(parser.name, context) as Any?
+            if(result is Exception) {
+              throw result
+            } else {
+              view = result as View
+              listViews.add(view)
+            }
             val map = AttributeMap()
 
             var i = 0

@@ -130,14 +130,14 @@ class EditorActivity : BaseActivity() {
 
     openLayout(project.mainLayout)
 
-    layoutAdapter.onClickListener = { openLayout(it) }
-
-    layoutAdapter.onLongClickListener = { view, position ->
-      if (project.allLayouts[position].path == project.mainLayout.path) {
-        ToastUtils.showShort("You can't modify main layout.")
-      } else showLayoutListOptions(view, position)
-      true
-    }
+//    layoutAdapter.onClickListener = { openLayout(it) }
+//
+//    layoutAdapter.onLongClickListener = { view, position ->
+//      if (project.allLayouts[position].path == project.mainLayout.path) {
+//        ToastUtils.showShort("You can't modify main layout.")
+//      } else showLayoutListOptions(view, position)
+//      true
+//    }
   }
 
   private fun defineXmlPicker() {
