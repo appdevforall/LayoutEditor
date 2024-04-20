@@ -38,7 +38,7 @@ class ConvertImportedXml(private val xml: String?) {
         }
       } catch (e: Exception) {
         e.printStackTrace()
-        return null
+        return e.toString()
       }
     } else {
       return null

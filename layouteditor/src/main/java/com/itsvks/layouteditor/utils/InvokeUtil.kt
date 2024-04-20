@@ -9,7 +9,12 @@ object InvokeUtil {
     @JvmStatic
     fun createView(className: String, context: Context): Any? {
         try {
-            val clazz = Class.forName(className)
+            /*******
+             * Emulate the drag action that would normally invoke this
+             *******/
+//            val clazzName = "com.itsvks.layouteditor.editor.palette.layouts.${className}"
+            val clazzName = "${className}Design"
+            val clazz = Class.forName(clazzName)
             val constructor = clazz.getConstructor(Context::class.java)
             return constructor.newInstance(context)
         } catch (e: ClassNotFoundException) {
