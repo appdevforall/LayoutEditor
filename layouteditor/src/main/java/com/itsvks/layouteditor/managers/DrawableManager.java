@@ -34,9 +34,10 @@ public class DrawableManager {
   }
 
   public static Drawable getDrawable(Context context, String key) {
-    return items.get(key).endsWith(".xml")
-        ? Utils.getVectorDrawableAsync(context, Uri.fromFile(new File(items.get(key))))
-        : Drawable.createFromPath(items.get(key));
+    return contains(key)?items.get(key).endsWith(".xml")
+            ? Utils.getVectorDrawableAsync(context, Uri.fromFile(new File(items.get(key))))
+            : Drawable.createFromPath(items.get(key))
+            : null;
   }
 
   public static Set<String> keySet() {

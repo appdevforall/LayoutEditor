@@ -3,6 +3,8 @@ package com.itsvks.layouteditor.utils
 import android.content.Context
 import android.view.View
 import com.itsvks.layouteditor.R.mipmap
+import com.itsvks.layouteditor.managers.ProjectManager
+import org.json.JSONObject
 import java.lang.reflect.InvocationTargetException
 
 object InvokeUtil {
@@ -12,8 +14,15 @@ object InvokeUtil {
             /*******
              * Emulate the drag action that would normally invoke this
              *******/
+            var clazzName : String
 //            val clazzName = "com.itsvks.layouteditor.editor.palette.layouts.${className}"
-            val clazzName = "${className}Design"
+            if(!className.endsWith("Design")) {
+                val classes =
+                    JSONObject(FileUtil.readFromAsset("widgetclasses.json", context))
+                clazzName = classes.getString(className).toString()
+            } else {
+                clazzName = className
+            }
             val clazz = Class.forName(clazzName)
             val constructor = clazz.getConstructor(Context::class.java)
             return constructor.newInstance(context)
