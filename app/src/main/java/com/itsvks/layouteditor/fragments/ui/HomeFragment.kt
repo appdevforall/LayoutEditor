@@ -35,7 +35,7 @@ import java.util.Calendar
 @Suppress("unused")
 class HomeFragment : Fragment() {
   private var binding: FragmentHomeBinding? = null
-  private var projectTimes: SharedPreferences? = null
+  private var sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(LayoutEditor.instance!!.context)
 
   private val projects = mutableListOf<ProjectFile>()
   private lateinit var adapter: ProjectListAdapter
@@ -44,8 +44,6 @@ class HomeFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
   ): View {
     binding = FragmentHomeBinding.inflate(inflater, container, false)
-    projectTimes =
-      PreferenceManager.getDefaultSharedPreferences(LayoutEditor.instance!!.context)
     return binding!!.root
   }
 
@@ -133,7 +131,7 @@ class HomeFragment : Fragment() {
 
     for (file in root.listFiles()!!) {
       val path = file.path
-      projects.add(ProjectFile(path, projectTimes!!.getString(path, currentTime)))
+      projects.add(ProjectFile(path, sharedPreferences.getString(path, currentTime)))
     }
   }
 
@@ -157,7 +155,7 @@ class HomeFragment : Fragment() {
     adapter.notifyItemInserted(projects.indexOf(project))
     updateNoProjectsViewVisibility()
 
-    projectTimes!!.edit().putString(projectDir, time).apply()
+    sharedPreferences.edit().putString(projectDir, time).apply()
 
     val intent = Intent(requireContext(), EditorActivity::class.java)
     ProjectManager.instance.openProject(project)
