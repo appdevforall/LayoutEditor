@@ -19,10 +19,13 @@ class ProjectFile : Parcelable {
   @JvmField
   var date: String? = null
 
-  constructor(path: String, date: String?) {
+  private val mainLayoutName:String
+
+  constructor(path: String, date: String?, mainLayoutName: String = "layout_main") {
     this.path = path
     this.date = date
     this.name = FileUtil.getLastSegmentFromPath(path)
+    this.mainLayoutName = mainLayoutName
   }
 
   fun rename(newPath: String) {
@@ -88,7 +91,7 @@ class ProjectFile : Parcelable {
     }
 
   val mainLayout: LayoutFile
-    get() = LayoutFile("$path/layout/layout_main.xml")
+    get() = LayoutFile("$path/layout/$mainLayoutName.xml")
 
   var currentLayout: LayoutFile
     get() {
@@ -112,9 +115,10 @@ class ProjectFile : Parcelable {
     parcel.writeString(name)
   }
 
-  private constructor(parcel: Parcel) {
+  private constructor(parcel: Parcel, mainLayoutName: String) {
     path = parcel.readString().toString()
     name = parcel.readString().toString()
+    this.mainLayoutName = mainLayoutName
   }
 
   companion object {
@@ -122,7 +126,7 @@ class ProjectFile : Parcelable {
     val CREATOR: Creator<ProjectFile> = object : Creator<ProjectFile> {
       @Contract("_ -> new")
       override fun createFromParcel(`in`: Parcel): ProjectFile {
-        return ProjectFile(`in`)
+        return ProjectFile(`in`, "")
       }
 
       @Contract(value = "_ -> new", pure = true)

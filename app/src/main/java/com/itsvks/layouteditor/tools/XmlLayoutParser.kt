@@ -50,9 +50,6 @@ class XmlLayoutParser(context: Context) {
         }
 
     fun parseFromXml(xml: String, context: Context) {
-
-        //listViews.add(container)
-
         try {
             val factory = XmlPullParserFactory.newInstance()
             val parser = factory.newPullParser()

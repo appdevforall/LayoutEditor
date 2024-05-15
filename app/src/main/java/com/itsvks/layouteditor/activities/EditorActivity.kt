@@ -144,10 +144,10 @@ class EditorActivity : BaseActivity() {
     xmlPicker =
       object : FilePicker(this) {
         override fun onPickFile(uri: Uri?) {
-          if (FileUtil.isDownloadsDocument(uri)) {
-            make(binding.root, string.select_from_storage).showAsError()
-            return
-          }
+         //if (FileUtil.isDownloadsDocument(uri)) {
+         //  make(binding.root, string.select_from_storage).showAsError()
+         //  return
+         //}
           val path = uri?.path
           if (path != null && path.endsWith(".xml")) {
             val xml = FileUtil.readFromUri(uri, this@EditorActivity)
