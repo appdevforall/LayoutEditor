@@ -25,6 +25,7 @@ class PreviewDrawableActivity : BaseActivity() {
     onLoad(binding.mainImage, supportActionBar)
   }
 
+  //todo remove and replace this with some reasonable replacement.
   companion object {
     @JvmStatic
     var onLoad: (ImageView, ActionBar?) -> Unit = { _, _ -> }
