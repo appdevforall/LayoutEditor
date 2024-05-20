@@ -11,7 +11,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+//import androidx.annotation.NonNull;
 
 import com.itsvks.layouteditor.vectormaster.models.ClipPathModel;
 import com.itsvks.layouteditor.vectormaster.models.GroupModel;
@@ -457,8 +457,8 @@ public class VectorMasterDrawable extends Drawable {
   }
 
   @Override
-  public void draw(@NonNull Canvas canvas) {
-    if (vectorModel == null) {
+  public void draw(Canvas canvas) {
+    if (vectorModel == null || canvas == null) {
       return;
     }
 

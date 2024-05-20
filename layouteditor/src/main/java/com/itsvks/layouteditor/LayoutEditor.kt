@@ -30,6 +30,6 @@ class LayoutEditor : Application() {
 
   companion object {
     var instance: LayoutEditor? = null
-      private set
+    private set
   }
 }

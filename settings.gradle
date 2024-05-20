@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Layout Editor"
-include ':app'
+include ':layouteditor'
 
 include(':vectormaster')

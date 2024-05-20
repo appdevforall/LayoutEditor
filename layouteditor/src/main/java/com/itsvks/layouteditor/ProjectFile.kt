@@ -1,9 +1,12 @@
 package com.itsvks.layouteditor
 
+import android.content.res.Resources
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
+import android.util.DisplayMetrics
 import com.itsvks.layouteditor.managers.PreferencesManager
+import com.itsvks.layouteditor.managers.ProjectManager
 import com.itsvks.layouteditor.utils.Constants
 import com.itsvks.layouteditor.utils.FileUtil
 import org.jetbrains.annotations.Contract
@@ -56,11 +59,56 @@ class ProjectFile : Parcelable {
     get() {
       val file = File("$path/drawable/")
 
+      val density = LayoutEditor.instance!!.context.resources.displayMetrics.densityDpi
+      val mipPath = when (density) {
+        DisplayMetrics.DENSITY_LOW -> {
+          "$path/mipmap-hdpi"
+        }
+
+        DisplayMetrics.DENSITY_HIGH,
+        DisplayMetrics.DENSITY_TV -> {
+          "$path/mipmap-hdpi"
+        }
+
+        DisplayMetrics.DENSITY_XHIGH,
+        DisplayMetrics.DENSITY_260,
+        DisplayMetrics.DENSITY_280,
+        DisplayMetrics.DENSITY_300 -> {
+          "$path/mipmap-xhdpi"
+        }
+
+        DisplayMetrics.DENSITY_XXHIGH,
+        DisplayMetrics.DENSITY_340,
+        DisplayMetrics.DENSITY_360,
+        DisplayMetrics.DENSITY_400,
+        DisplayMetrics.DENSITY_420,
+        DisplayMetrics.DENSITY_440 -> {
+          "$path/mipmap-xxhdpi"
+        }
+
+        DisplayMetrics.DENSITY_XXXHIGH,
+        DisplayMetrics.DENSITY_560,
+        DisplayMetrics.DENSITY_600 -> {
+          "$path/mipmap-xxxhdpi"
+        }
+
+        else -> "$path/mipmap-anydpi-v26"
+      }
+
+
+      val file1 = File("$mipPath")
+
       if (!file.exists()) {
         FileUtil.makeDir("$path/drawable/")
       }
 
-      return file.listFiles()
+      if (!file1.exists()) {
+        FileUtil.makeDir("$mipPath")
+      }
+
+
+
+      return (file.listFiles() + file1.listFiles()) as Array<out File>
     }
 
   val fonts: Array<out File>?
