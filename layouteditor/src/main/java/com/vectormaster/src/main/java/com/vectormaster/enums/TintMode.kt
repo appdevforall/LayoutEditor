@@ -1,4 +1,4 @@
-package com.itsvks.layouteditor.vectormaster.enums
+package com.vectormaster.src.main.java.com.vectormaster.enums
 
 enum class TintMode {
   ADD,

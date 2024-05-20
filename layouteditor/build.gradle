@@ -95,7 +95,5 @@ dependencies {
     
     implementation 'commons-io:commons-io:2.15.1'
     
-    implementation project(':vectormaster')
-    
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
 }

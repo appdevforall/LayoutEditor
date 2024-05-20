@@ -1,4 +1,21 @@
-package com.itsvks.layouteditor.vectormaster.models;
+/*
+ *  This file is part of AndroidIDE.
+ *
+ *  AndroidIDE is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  AndroidIDE is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package com.vectormaster.src.main.java.com.vectormaster.models;
 
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -7,7 +24,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 
-import com.itsvks.layouteditor.vectormaster.utilities.parser.PathParser;
+import com.vectormaster.src.main.java.com.vectormaster.utilities.parser.PathParser;
 
 public class ClipPathModel {
   private String name;
@@ -30,7 +47,7 @@ public class ClipPathModel {
     if (pathData != null) {
       if (useLegacyParser) {
         originalPath =
-            com.itsvks.layouteditor.vectormaster.utilities.legacyparser.PathParser
+            com.vectormaster.src.main.java.com.vectormaster.utilities.legacyparser.PathParser
                 .createPathFromPathData(pathData);
       } else {
         originalPath = PathParser.doPath(pathData);
