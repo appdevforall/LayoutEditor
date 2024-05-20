@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster;
+package com.vectormaster;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -31,11 +31,11 @@ import android.util.Log;
 //import androidx.annotation.NonNull;
 
 import com.itsvks.layouteditor.vectormaster.DefaultValues;
-import com.vectormaster.src.main.java.com.vectormaster.models.ClipPathModel;
-import com.vectormaster.src.main.java.com.vectormaster.models.GroupModel;
-import com.vectormaster.src.main.java.com.vectormaster.models.PathModel;
-import com.vectormaster.src.main.java.com.vectormaster.models.VectorModel;
-import com.vectormaster.src.main.java.com.vectormaster.utilities.Utils;
+import com.vectormaster.models.GroupModel;
+import com.vectormaster.models.PathModel;
+import com.vectormaster.models.VectorModel;
+import com.vectormaster.utilities.Utils;
+import com.vectormaster.models.ClipPathModel;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

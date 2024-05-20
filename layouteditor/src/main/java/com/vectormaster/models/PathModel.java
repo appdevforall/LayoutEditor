@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster.models;
+package com.vectormaster.models;
 
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -25,8 +25,8 @@ import android.graphics.PathMeasure;
 import android.graphics.RectF;
 
 import com.itsvks.layouteditor.vectormaster.DefaultValues;
-import com.vectormaster.src.main.java.com.vectormaster.utilities.Utils;
-import com.vectormaster.src.main.java.com.vectormaster.utilities.parser.PathParser;
+import com.vectormaster.utilities.Utils;
+import com.vectormaster.utilities.parser.PathParser;
 
 public class PathModel {
 
@@ -85,7 +85,7 @@ public class PathModel {
     if (pathData != null) {
       if (useLegacyParser) {
         originalPath =
-            com.vectormaster.src.main.java.com.vectormaster.utilities.legacyparser.PathParser
+            com.vectormaster.utilities.legacyparser.PathParser
                 .createPathFromPathData(pathData);
       } else {
         originalPath = PathParser.doPath(pathData);

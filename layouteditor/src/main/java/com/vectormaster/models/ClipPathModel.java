@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster.models;
+package com.vectormaster.models;
 
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -24,7 +24,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 
-import com.vectormaster.src.main.java.com.vectormaster.utilities.parser.PathParser;
+import com.vectormaster.utilities.parser.PathParser;
 
 public class ClipPathModel {
   private String name;
@@ -47,7 +47,7 @@ public class ClipPathModel {
     if (pathData != null) {
       if (useLegacyParser) {
         originalPath =
-            com.vectormaster.src.main.java.com.vectormaster.utilities.legacyparser.PathParser
+            com.vectormaster.utilities.legacyparser.PathParser
                 .createPathFromPathData(pathData);
       } else {
         originalPath = PathParser.doPath(pathData);

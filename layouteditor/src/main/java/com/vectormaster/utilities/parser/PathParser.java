@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster.utilities.parser;
+package com.vectormaster.utilities.parser;
 
 import android.graphics.Path;
 import android.graphics.RectF;

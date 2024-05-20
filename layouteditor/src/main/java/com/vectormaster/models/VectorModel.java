@@ -15,14 +15,14 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster.models;
+package com.vectormaster.models;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Path;
 
-import com.vectormaster.src.main.java.com.vectormaster.enums.TintMode;
+import com.vectormaster.enums.TintMode;
 
 import java.util.ArrayList;
 

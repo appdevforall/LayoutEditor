@@ -34,7 +34,7 @@ import com.itsvks.layouteditor.utils.Constants
 import com.itsvks.layouteditor.utils.FilePicker
 import com.itsvks.layouteditor.utils.FileUtil
 import com.itsvks.layouteditor.utils.SBUtils
-import com.vectormaster.src.main.java.com.vectormaster.VectorMasterDrawable
+import com.vectormaster.VectorMasterDrawable
 import java.io.FileNotFoundException
 
 class ResourceManagerActivity : BaseActivity() {

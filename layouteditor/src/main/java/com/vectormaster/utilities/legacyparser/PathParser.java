@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster.utilities.legacyparser;
+package com.vectormaster.utilities.legacyparser;
 
 /*
  * This class has been extracted from the android source code. In the latest versions, most of the code has been moved for

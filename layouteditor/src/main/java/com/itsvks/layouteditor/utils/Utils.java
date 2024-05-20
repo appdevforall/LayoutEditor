@@ -24,7 +24,7 @@ import com.google.android.material.R;
 import com.google.android.material.color.MaterialColors;
 import com.itsvks.layouteditor.R.string;
 
-import com.vectormaster.src.main.java.com.vectormaster.VectorMasterDrawable;
+import com.vectormaster.VectorMasterDrawable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

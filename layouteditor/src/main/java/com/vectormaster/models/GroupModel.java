@@ -15,13 +15,13 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster.models;
+package com.vectormaster.models;
 
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 
 import com.itsvks.layouteditor.vectormaster.DefaultValues;
-import com.vectormaster.src.main.java.com.vectormaster.utilities.Utils;
+import com.vectormaster.utilities.Utils;
 
 import java.util.ArrayList;
 

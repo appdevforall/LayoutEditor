@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vectormaster.src.main.java.com.vectormaster.utilities;
+package com.vectormaster.utilities;
 
 import android.content.res.Resources;
 import android.graphics.Color;
