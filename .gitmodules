@@ -1,0 +1,3 @@
+[submodule "VectorMaster"]
+	path = VectorMaster
+	url = https://github.com/harjot-oberai/VectorMaster.git
