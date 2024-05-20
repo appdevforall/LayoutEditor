@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
   tools:override="true"
-  tools:ignore="MissingTranslation,PrivateResource">
+  tools:ignore="MissingTranslation,PrivateResource,ExtraTranslation">
   <string name="app_name">Layout Editor</string>
   <string name="app_slogan">Create Awesome UI!</string>
   <string name="home">HOME</string>
@@ -130,6 +130,8 @@
   <string name="medium">Medium</string>
   <string name="large">Large</string>
   <string name="invalid_name">Invalid Name</string>
-  <string name="hmmm">¯⁠⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</string>
+  <string name="hmmm">¯⁠\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</string>
   <string name="msg_symbol_not_allowed">The name must not contain symbols.</string>
+  <string name="title_save_layout">Save layout</string>
+  <string name="msg_save_layout">Do you want to save the layout?</string>
 </resources>

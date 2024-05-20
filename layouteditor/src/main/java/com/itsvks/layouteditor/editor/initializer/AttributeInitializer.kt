@@ -51,9 +51,9 @@ class AttributeInitializer {
   fun applyAttribute(
     target: View, value: String, attribute: HashMap<String, Any>
   ) {
-    val methodName = attribute?.get(Constants.KEY_METHOD_NAME)?.toString()
-    val className = attribute?.get(Constants.KEY_CLASS_NAME)?.toString()
-    val attributeName = attribute?.get(Constants.KEY_ATTRIBUTE_NAME)?.toString()
+    val methodName = attribute[Constants.KEY_METHOD_NAME]?.toString()
+    val className = attribute[Constants.KEY_CLASS_NAME]?.toString()
+    val attributeName = attribute[Constants.KEY_ATTRIBUTE_NAME]?.toString()
 
     // update ids attributes for all views
     if (value.startsWith("@+id/") && viewAttributeMap[target]!!.contains("android:id")) {
@@ -61,9 +61,9 @@ class AttributeInitializer {
         val map = viewAttributeMap[view]
 
         for (key in map!!.keySet()) {
-          val `val` = map.getValue(key)
+          val mValue = map.getValue(key)
 
-          if (`val`.startsWith("@id/") && `val` == viewAttributeMap[target]!!
+          if (mValue.startsWith("@id/") && mValue == viewAttributeMap[target]!!
               .getValue("android:id").replace("+", "")
           ) {
             map.putValue(key, value.replace("+", ""))

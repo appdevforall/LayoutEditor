@@ -640,5 +640,38 @@
       "attributeName": "android:fillViewport",
       "argumentType": "boolean"
     }
+  ],
+  "android.widget.FrameLayout": [
+    {
+      "name": "android:foregroundGravity",
+      "methodName": "setForegroundGravity",
+      "className": "layouts.FrameLayoutCaller",
+      "attributeName": "android:foregroundGravity",
+      "argumentType": "flag",
+      "arguments": [
+        "left",
+        "right",
+        "top",
+        "bottom",
+        "center",
+        "center_horizontal",
+        "center_vertical",
+        "fill",
+        "fill_horizontal",
+        "fill_vertical",
+        "clip_horizontal",
+        "clip_vertical",
+        "start",
+        "end"
+      ],
+      "defaultValue": "-1"
+    },
+    {
+      "name": "android:measureAllChildren",
+      "methodName": "setMeasureAllChildren",
+      "className": "layouts.FrameLayoutCaller",
+      "attributeName": "android:measureAllChildren",
+      "argumentType": "boolean"
+    }
   ]
 }

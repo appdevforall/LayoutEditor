@@ -1,4 +1,4 @@
-package com.itsvks.layouteditor.editor.callers;
+package com.itsvks.layouteditor.editor.callers.parentcallers;
 
 import android.content.Context;
 import android.view.View;
@@ -170,26 +170,22 @@ public class RelativeLayoutCaller {
 	}
 
 	public static void setLayoutMarginLeft(View target, String value, Context context) {
-		int margin = (int) DimensionUtil.parse(value, context);
-		((RelativeLayout.LayoutParams) target.getLayoutParams()).leftMargin = margin;
+    ((RelativeLayout.LayoutParams) target.getLayoutParams()).leftMargin = (int) DimensionUtil.parse(value, context);
 		target.requestLayout();
 	}
 
 	public static void setLayoutMarginRight(View target, String value, Context context) {
-		int margin = (int) DimensionUtil.parse(value, context);
-		((RelativeLayout.LayoutParams) target.getLayoutParams()).rightMargin = margin;
+    ((RelativeLayout.LayoutParams) target.getLayoutParams()).rightMargin = (int) DimensionUtil.parse(value, context);
 		target.requestLayout();
 	}
 
 	public static void setLayoutMarginTop(View target, String value, Context context) {
-		int margin = (int) DimensionUtil.parse(value, context);
-		((RelativeLayout.LayoutParams) target.getLayoutParams()).topMargin = margin;
+    ((RelativeLayout.LayoutParams) target.getLayoutParams()).topMargin = (int) DimensionUtil.parse(value, context);
 		target.requestLayout();
 	}
 
 	public static void setLayoutMarginBottom(View target, String value, Context context) {
-		int margin = (int) DimensionUtil.parse(value, context);
-		((RelativeLayout.LayoutParams) target.getLayoutParams()).bottomMargin = margin;
+    ((RelativeLayout.LayoutParams) target.getLayoutParams()).bottomMargin = (int) DimensionUtil.parse(value, context);
 		target.requestLayout();
 	}
 }

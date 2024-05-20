@@ -42,7 +42,9 @@ import com.itsvks.layouteditor.editor.dialogs.SizeDialog
 import com.itsvks.layouteditor.editor.dialogs.StringDialog
 import com.itsvks.layouteditor.editor.dialogs.ViewDialog
 import com.itsvks.layouteditor.editor.initializer.AttributeInitializer
+
 import com.itsvks.layouteditor.editor.initializer.AttributeMap
+import com.itsvks.layouteditor.managers.IdManager
 import com.itsvks.layouteditor.managers.IdManager.addId
 import com.itsvks.layouteditor.managers.IdManager.getViewId
 import com.itsvks.layouteditor.managers.IdManager.removeId
@@ -292,6 +294,13 @@ class DesignEditor : LinearLayout {
               if (newView is EditText) newView.isFocusable = false
 
               val map = AttributeMap()
+              val id = getIdForNewView(
+                newView.javaClass.superclass.simpleName
+                  .replace(" ".toRegex(), "_")
+                  .lowercase()
+              )
+              IdManager.addNewId(newView, id)
+              map.putValue("android:id", "@+id/$id")
               map.putValue("android:layout_width", "wrap_content")
               map.putValue("android:layout_height", "wrap_content")
               viewAttributeMap[newView] = map
@@ -322,6 +331,20 @@ class DesignEditor : LinearLayout {
         }
         true
       })
+  }
+
+  private fun getIdForNewView(name: String): String {
+    var id = name
+    var n = 0
+    var firstTime = true
+    while (IdManager.containsId(id)) {
+      n++
+      id = if (firstTime) "$name$n" else id.replace(
+        id.elementAt(id.lastIndex).toString().toRegex(), n.toString()
+      )
+      firstTime = false
+    }
+    return id
   }
 
   fun loadLayoutFromParser(xml: String) {

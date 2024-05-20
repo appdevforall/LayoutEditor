@@ -87,7 +87,15 @@ class EditorActivity : BaseActivity() {
       } else {
         val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
         if (result.isNotEmpty()) {
-          finishAfterTransition()
+          MaterialAlertDialogBuilder(this@EditorActivity)
+            .setTitle(string.title_save_layout)
+            .setMessage(string.msg_save_layout)
+            .setPositiveButton(string.yes) { _, _ ->
+              saveXml()
+              finishAfterTransition()
+            }
+            .setNegativeButton(string.no) { _, _ -> finishAfterTransition() }
+            .show()
         } else {
           finishAfterTransition()
         }
@@ -236,6 +244,7 @@ class EditorActivity : BaseActivity() {
     }
   }
 
+  @SuppressLint("SetTextI18n")
   private fun setupDrawerNavigationRail() {
     val fab = binding.paletteNavigation.headerView?.findViewById<FloatingActionButton>(R.id.fab)
 

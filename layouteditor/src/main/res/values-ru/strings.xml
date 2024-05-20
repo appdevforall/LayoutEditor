@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
   tools:override="true"
-  tools:ignore="MissingTranslation,PrivateResource">
+  tools:ignore="MissingTranslation,PrivateResource,ExtraTranslation">
   <string name="app_name">Layout Editor</string>
   <string name="app_slogan">Создай потрясающий интерфейс!</string>
   <string name="home">НАЧАТЬ</string>
@@ -117,5 +117,5 @@
   <string name="small">Малый</string>
   <string name="medium">Средний</string>
   <string name="large">Большой</string>
-  <string name="hmmm">¯⁠⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</string>
+  <string name="hmmm">¯⁠\\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</string>
 </resources>
