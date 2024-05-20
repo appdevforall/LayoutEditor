@@ -64,7 +64,7 @@ class HomeActivity : BaseActivity() {
     drawerLayout = binding.drawer
     navigationView = binding.navigationView
 
-    contentView = binding.content
+    contentView = binding.content1
     goToHome()
     navigationView.setCheckedItem(R.id.nav_home)
 

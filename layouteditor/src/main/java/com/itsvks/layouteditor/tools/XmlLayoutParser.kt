@@ -64,8 +64,9 @@ class XmlLayoutParser(context: Context) {
                      * And adds them to the listview.
                      */
                     XmlPullParser.START_TAG -> {
-                        val result = createView(parser.name, context) as Any?
-                        if(result is Exception) {
+                        val result = createView(parser.name, context)
+                        val view: View
+                        if (result is Exception) {
                             throw result
                         } else {
                             view = result as View

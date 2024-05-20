@@ -39,7 +39,7 @@ import com.itsvks.layouteditor.R
 import com.itsvks.layouteditor.R.string
 import com.itsvks.layouteditor.adapters.LayoutListAdapter
 import com.itsvks.layouteditor.adapters.PaletteListAdapter
-import com.itsvks.layouteditor.databinding.ActivityLayouteditorBinding
+import com.itsvks.layouteditor.databinding.ActivityLayoutEditorBinding
 import com.itsvks.layouteditor.databinding.TextinputlayoutBinding
 import com.itsvks.layouteditor.editor.DesignEditor
 import com.itsvks.layouteditor.editor.DeviceConfiguration
@@ -64,7 +64,7 @@ import java.io.File
 
 @SuppressLint("UnsafeOptInUsageError")
 class EditorActivity : BaseActivity() {
-  private lateinit var binding: ActivityLayouteditorBinding
+  private lateinit var binding: ActivityLayoutEditorBinding
 
   private lateinit var drawerLayout: DrawerLayout
   private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
@@ -101,7 +101,7 @@ class EditorActivity : BaseActivity() {
   }
 
   private fun init() {
-    binding = ActivityLayouteditorBinding.inflate(layoutInflater)
+    binding = ActivityLayoutEditorBinding.inflate(layoutInflater)
 
     setContentView(binding.root)
     setSupportActionBar(binding.topAppBar)
@@ -454,7 +454,7 @@ class EditorActivity : BaseActivity() {
       .show()
   }
 
-  private fun setToolbarButtonOnClickListener(binding: ActivityLayouteditorBinding) {
+  private fun setToolbarButtonOnClickListener(binding: ActivityLayoutEditorBinding) {
     TooltipCompat.setTooltipText(binding.viewType, "View Type")
     TooltipCompat.setTooltipText(binding.deviceSize, "Size")
     binding.viewType.setOnClickListener { view ->
