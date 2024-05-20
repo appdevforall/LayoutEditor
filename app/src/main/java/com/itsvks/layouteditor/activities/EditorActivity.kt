@@ -39,7 +39,7 @@ import com.itsvks.layouteditor.R
 import com.itsvks.layouteditor.R.string
 import com.itsvks.layouteditor.adapters.LayoutListAdapter
 import com.itsvks.layouteditor.adapters.PaletteListAdapter
-import com.itsvks.layouteditor.databinding.ActivityEditorBinding
+import com.itsvks.layouteditor.databinding.ActivityLayoutEditorBinding
 import com.itsvks.layouteditor.databinding.TextinputlayoutBinding
 import com.itsvks.layouteditor.editor.DesignEditor
 import com.itsvks.layouteditor.editor.DeviceConfiguration
@@ -64,7 +64,7 @@ import java.io.File
 
 @SuppressLint("UnsafeOptInUsageError")
 class EditorActivity : BaseActivity() {
-  private lateinit var binding: ActivityEditorBinding
+  private lateinit var binding: ActivityLayoutEditorBinding
 
   private lateinit var drawerLayout: DrawerLayout
   private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
@@ -109,7 +109,7 @@ class EditorActivity : BaseActivity() {
   }
 
   private fun init() {
-    binding = ActivityEditorBinding.inflate(layoutInflater)
+    binding = ActivityLayoutEditorBinding.inflate(layoutInflater)
 
     setContentView(binding.root)
     setSupportActionBar(binding.topAppBar)
@@ -138,14 +138,14 @@ class EditorActivity : BaseActivity() {
 
     openLayout(project.mainLayout)
 
-    layoutAdapter.onClickListener = { openLayout(it) }
-
-    layoutAdapter.onLongClickListener = { view, position ->
-      if (project.allLayouts[position].path == project.mainLayout.path) {
-        ToastUtils.showShort("You can't modify main layout.")
-      } else showLayoutListOptions(view, position)
-      true
-    }
+//    layoutAdapter.onClickListener = { openLayout(it) }
+//
+//    layoutAdapter.onLongClickListener = { view, position ->
+//      if (project.allLayouts[position].path == project.mainLayout.path) {
+//        ToastUtils.showShort("You can't modify main layout.")
+//      } else showLayoutListOptions(view, position)
+//      true
+//    }
   }
 
   private fun defineXmlPicker() {
@@ -463,7 +463,7 @@ class EditorActivity : BaseActivity() {
       .show()
   }
 
-  private fun setToolbarButtonOnClickListener(binding: ActivityEditorBinding) {
+  private fun setToolbarButtonOnClickListener(binding: ActivityLayoutEditorBinding) {
     TooltipCompat.setTooltipText(binding.viewType, "View Type")
     TooltipCompat.setTooltipText(binding.deviceSize, "Size")
     binding.viewType.setOnClickListener { view ->

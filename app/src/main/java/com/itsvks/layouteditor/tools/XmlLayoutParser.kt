@@ -59,15 +59,21 @@ class XmlLayoutParser(context: Context) {
       while (parser.eventType != XmlPullParser.END_DOCUMENT) {
         when (parser.eventType) {
 
-            /**
-             * This method finds all the views goth ViewGroups and Views.
-             * And adds them to the listview.
-             */
-          XmlPullParser.START_TAG -> {
-            val view = createView(parser.name, context) as View
-            listViews.add(view)
+                    /**
+                     * This method finds all the views goth ViewGroups and Views.
+                     * And adds them to the listview.
+                     */
+                    XmlPullParser.START_TAG -> {
+                        val result = createView(parser.name, context)
+                        val view: View
+                        if (result is Exception) {
+                            throw result
+                        } else {
+                            view = result as View
+                            listViews.add(view)
+                        }
 
-            val map = AttributeMap()
+                        val map = AttributeMap()
 
                         var i = 0
                         while (i < parser.attributeCount) {
