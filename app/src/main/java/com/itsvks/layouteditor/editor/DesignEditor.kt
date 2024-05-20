@@ -42,6 +42,7 @@ import com.itsvks.layouteditor.editor.dialogs.SizeDialog
 import com.itsvks.layouteditor.editor.dialogs.StringDialog
 import com.itsvks.layouteditor.editor.dialogs.ViewDialog
 import com.itsvks.layouteditor.editor.initializer.AttributeInitializer
+
 import com.itsvks.layouteditor.editor.initializer.AttributeMap
 import com.itsvks.layouteditor.managers.IdManager
 import com.itsvks.layouteditor.managers.IdManager.addId
