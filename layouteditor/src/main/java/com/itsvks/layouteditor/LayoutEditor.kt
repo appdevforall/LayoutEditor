@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.color.DynamicColors
 import com.itsvks.layouteditor.managers.PreferencesManager
+import com.itsvks.layouteditor.managers.ProjectManager
 
 class LayoutEditor : Application() {
   override fun onCreate() {
@@ -16,6 +17,7 @@ class LayoutEditor : Application() {
     if (PreferencesManager.isApplyDynamicColors && DynamicColors.isDynamicColorAvailable()) {
       DynamicColors.applyToActivitiesIfAvailable(this)
     }
+    ProjectManager.instance.initManger(this)
   }
 
   val context: Context
