@@ -42,8 +42,8 @@ class CrashActivity : BaseActivity() {
         append("\n")
         append(intent.getStringExtra("Software"))
         append("\nApp version: ")
-        append(BuildConfig.VERSION_NAME)
-        append("\n\n")
+        //append(BuildConfig.VERSION_NAME)
+        //append("\n\n")
         append(intent.getStringExtra("Error"))
         append("\n\n")
         append(

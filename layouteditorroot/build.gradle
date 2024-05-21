@@ -1,7 +1,7 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.android.gms.oss-licenses-plugin'
+    //id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 android {
@@ -9,7 +9,7 @@ android {
     namespace "com.itsvks.layouteditor"
 
     defaultConfig {
-        applicationId "com.itsvks.layouteditor"
+        //applicationId "com.itsvks.layouteditor"
         minSdk 26
         targetSdk 34
         versionCode 8
@@ -94,8 +94,9 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.11.0'
     
     implementation 'commons-io:commons-io:2.15.1'
-    
-    implementation project(':vectormaster')
+
+    //Project proj = project(':layouteditor:vectormaster').projectDir = new File(getRootDir().path + "\\LayoutEditor", '/vectormaster')
+    implementation(projects.layouteditor.vectormaster)
     
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
 }
