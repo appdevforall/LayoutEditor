@@ -27,6 +27,6 @@ class AboutFragment : Fragment() {
 
     binding.details.text =
       getString(string.share_description, Constants.GITHUB_URL)
-    binding.version.text = "v${BuildConfig.VERSION_NAME}"
+    //binding.version.text = "v${BuildConfig.VERSION_NAME}"
   }
 }
