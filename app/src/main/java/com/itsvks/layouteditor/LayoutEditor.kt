@@ -9,11 +9,14 @@ import com.google.android.material.color.DynamicColors
 import com.itsvks.layouteditor.managers.PreferencesManager
 
 class LayoutEditor : Application() {
+
+  private lateinit var prefManager: PreferencesManager
   override fun onCreate() {
     super.onCreate()
     instance = this
-    AppCompatDelegate.setDefaultNightMode(PreferencesManager.currentTheme)
-    if (PreferencesManager.isApplyDynamicColors && DynamicColors.isDynamicColorAvailable()) {
+    prefManager = PreferencesManager(this.context)
+    AppCompatDelegate.setDefaultNightMode(prefManager.currentTheme)
+    if (prefManager.isApplyDynamicColors && DynamicColors.isDynamicColorAvailable()) {
       DynamicColors.applyToActivitiesIfAvailable(this)
     }
   }

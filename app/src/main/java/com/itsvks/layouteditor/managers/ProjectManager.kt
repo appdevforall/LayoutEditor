@@ -26,7 +26,9 @@ class ProjectManager private constructor() {
     fun openProject(project: ProjectFile?) {
         openedProject = project
         openedProject!!.drawables?.let { DrawableManager.loadFromFiles(it) }
-        FontManager.loadFromFiles(openedProject!!.fonts)
+        openedProject!!.fonts?.let {
+            FontManager.loadFromFiles(it)
+        }
     }
 
     fun closeProject() {

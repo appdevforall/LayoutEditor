@@ -37,7 +37,7 @@ import java.io.File
 
 class ProjectListAdapter(private val projects: MutableList<ProjectFile>) :
   RecyclerView.Adapter<ProjectListAdapter.ViewHolder>() {
-  private val prefs = PreferencesManager.prefs
+  private lateinit var preferencesManager:PreferencesManager
 
   var onDeleteCallback: ((Int) -> Unit)? = null
 
@@ -224,20 +224,20 @@ class ProjectListAdapter(private val projects: MutableList<ProjectFile>) :
 
   private fun openProject(v: View, position: Int) {
     val intent = Intent(v.context, EditorActivity::class.java)
-
+    preferencesManager = PreferencesManager(v.context)
     ProjectManager.instance.openProject(projects[position])
 
     val projectDir =
       "${FileUtil.getPackageDataDir(instance!!.context)}/projects/${projects[position].name}"
 
-    if (!prefs.getBoolean("copyAssets", false)
+    if (!preferencesManager.prefs.getBoolean("copyAssets", false)
       && !(File("$projectDir/values/colors.xml").exists())
     ) {
       FileUtil.makeDir("$projectDir/values/")
       // FileUtil.makeDir(projectDir + "/drawable/");
       // FileUtil.copyFileFromAsset("default_image.png", projectDir + "/drawable");
       FileUtil.copyFileFromAsset("colors.xml", "$projectDir/values")
-      prefs.edit().putBoolean("copyAssets", true).apply()
+      preferencesManager.prefs.edit().putBoolean("copyAssets", true).apply()
     }
     v.context.startActivity(intent)
   }

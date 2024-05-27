@@ -2,6 +2,9 @@ package com.itsvks.layouteditor.fragments.ui
 
 import android.os.Bundle
 import android.os.Process
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -14,12 +17,20 @@ import kotlin.system.exitProcess
 
 class PreferencesFragment : PreferenceFragmentCompat() {
 
+  private var preferencesManager: PreferencesManager? = null
+
   private val themes by lazy {
     arrayOf(
       getString(R.string.theme_auto),
       getString(R.string.theme_dark),
       getString(R.string.theme_light)
     )
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?): View {
+    preferencesManager = this.context?.let { PreferencesManager(it) }
+    return super.onCreateView(inflater, container, savedInstanceState)
   }
 
   private val themeValues by lazy { arrayOf("Auto", "Dark", "Light") }
@@ -31,13 +42,15 @@ class PreferencesFragment : PreferenceFragmentCompat() {
     findPreference<Preference>(SharedPreferencesKeys.KEY_APP_THEME)?.onPreferenceClickListener =
       Preference.OnPreferenceClickListener {
         val selectedThemeValue =
-          PreferencesManager.prefs.getString(SharedPreferencesKeys.KEY_APP_THEME, "Auto")
+          preferencesManager?.prefs?.getString(SharedPreferencesKeys.KEY_APP_THEME, "Auto")
         MaterialAlertDialogBuilder(requireContext())
           .setTitle(R.string.choose_theme)
           .setSingleChoiceItems(themes, themeValues.indexOf(selectedThemeValue)) { d, w ->
-            PreferencesManager.prefs.edit()
-              .putString(SharedPreferencesKeys.KEY_APP_THEME, themeValues[w]).apply()
-            AppCompatDelegate.setDefaultNightMode(PreferencesManager.currentTheme)
+            preferencesManager?.prefs?.edit()
+              ?.putString(SharedPreferencesKeys.KEY_APP_THEME, themeValues[w])?.apply()
+            preferencesManager?.currentTheme?.let { manager ->
+              AppCompatDelegate.setDefaultNightMode(manager)
+            }
             d.dismiss()
           }
           .setPositiveButton(R.string.cancel, null)
@@ -55,8 +68,9 @@ class PreferencesFragment : PreferenceFragmentCompat() {
           .setCancelable(false)
           .setNegativeButton(R.string.cancel) { d, _ ->
             preference?.sharedPreferences?.edit()
-              ?.putBoolean(preference.key, !PreferencesManager.isApplyDynamicColors)?.apply()
-            preference?.isChecked = PreferencesManager.isApplyDynamicColors
+              ?.putBoolean(preference.key, preferencesManager?.isApplyDynamicColors == true)
+              ?.apply()
+            preference?.isChecked = preferencesManager?.isApplyDynamicColors == true
             d.cancel()
           }
           .setPositiveButton(R.string.okay) { _, _ ->

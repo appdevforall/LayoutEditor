@@ -48,8 +48,7 @@ import com.itsvks.layouteditor.managers.IdManager
 import com.itsvks.layouteditor.managers.IdManager.addId
 import com.itsvks.layouteditor.managers.IdManager.getViewId
 import com.itsvks.layouteditor.managers.IdManager.removeId
-import com.itsvks.layouteditor.managers.PreferencesManager.isEnableVibration
-import com.itsvks.layouteditor.managers.PreferencesManager.isShowStroke
+import com.itsvks.layouteditor.managers.PreferencesManager
 import com.itsvks.layouteditor.managers.UndoRedoManager
 import com.itsvks.layouteditor.tools.XmlLayoutGenerator
 import com.itsvks.layouteditor.tools.XmlLayoutParser
@@ -85,6 +84,7 @@ class DesignEditor : LinearLayout {
   private var isBlueprint = false
   private var structureView: StructureView? = null
   private var undoRedoManager: UndoRedoManager? = null
+  private lateinit var preferencesManager: PreferencesManager
 
   constructor(context: Context) : super(context) {
     init(context)
@@ -109,6 +109,8 @@ class DesignEditor : LinearLayout {
     initAttributes()
     shadow = View(context)
     paint = Paint()
+
+    this.preferencesManager = PreferencesManager(context)
 
     shadow.setBackgroundColor(
       MaterialColors.getColor(this, com.google.android.material.R.attr.colorOutline)
@@ -188,7 +190,7 @@ class DesignEditor : LinearLayout {
       for (view in viewAttributeMap.keys) {
         val cls = view.javaClass
         val method = cls.getMethod("setStrokeEnabled", Boolean::class.javaPrimitiveType)
-        method.invoke(view, isShowStroke)
+        method.invoke(view, preferencesManager.isShowStroke)
       }
     } catch (e: Exception) {
       e.printStackTrace()
@@ -216,7 +218,7 @@ class DesignEditor : LinearLayout {
 
         when (event.action) {
           DragEvent.ACTION_DRAG_STARTED -> {
-            if (isEnableVibration) VibrateUtils.vibrate(100)
+            if (preferencesManager.isEnableVibration) VibrateUtils.vibrate(100)
             if ((draggedView != null
                 && !(draggedView is AdapterView<*> && parent is AdapterView<*>))
             ) parent.removeView(draggedView)
@@ -312,7 +314,7 @@ class DesignEditor : LinearLayout {
                 val setStrokeEnabled =
                   cls.getMethod("setStrokeEnabled", Boolean::class.javaPrimitiveType)
                 val setBlueprint = cls.getMethod("setBlueprint", Boolean::class.javaPrimitiveType)
-                setStrokeEnabled.invoke(newView, isShowStroke)
+                setStrokeEnabled.invoke(newView, preferencesManager.isShowStroke)
                 setBlueprint.invoke(newView, isBlueprint)
               } catch (e: Exception) {
                 e.printStackTrace()
@@ -846,7 +848,7 @@ class DesignEditor : LinearLayout {
     try {
       val cls: Class<*> = target.javaClass
       val method = cls.getMethod("setStrokeEnabled", Boolean::class.javaPrimitiveType)
-      method.invoke(target, isShowStroke)
+      method.invoke(target, preferencesManager.isShowStroke)
     } catch (e: Exception) {
       e.printStackTrace()
     }

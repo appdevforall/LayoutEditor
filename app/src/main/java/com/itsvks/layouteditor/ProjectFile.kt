@@ -1,5 +1,6 @@
 package com.itsvks.layouteditor
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
@@ -20,12 +21,14 @@ class ProjectFile : Parcelable {
   var date: String? = null
 
   private val mainLayoutName:String
+  private lateinit var preferencesManager:PreferencesManager
 
-  constructor(path: String, date: String?, mainLayoutName: String = "layout_main") {
+  constructor(path: String, date: String?, context: Context, mainLayoutName: String = "layout_main") {
     this.path = path
     this.date = date
     this.name = FileUtil.getLastSegmentFromPath(path)
     this.mainLayoutName = mainLayoutName
+    this.preferencesManager = PreferencesManager(context = context)
   }
 
   fun rename(newPath: String) {
@@ -95,11 +98,11 @@ class ProjectFile : Parcelable {
 
   var currentLayout: LayoutFile
     get() {
-      val currentLayoutPath = PreferencesManager.prefs.getString(Constants.CURRENT_LAYOUT, "")
+      val currentLayoutPath = preferencesManager.prefs.getString(Constants.CURRENT_LAYOUT, "")
       return LayoutFile(currentLayoutPath)
     }
     set(value) {
-      PreferencesManager.prefs.edit().putString(Constants.CURRENT_LAYOUT, value.path).apply()
+      preferencesManager.prefs.edit().putString(Constants.CURRENT_LAYOUT, value.path).apply()
     }
 
   fun createDefaultLayout() {

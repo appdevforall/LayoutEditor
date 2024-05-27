@@ -131,7 +131,7 @@ class HomeFragment : Fragment() {
 
     for (file in root.listFiles()!!) {
       val path = file.path
-      projects.add(ProjectFile(path, sharedPreferences.getString(path, currentTime)))
+      projects.add(ProjectFile(path, sharedPreferences.getString(path, currentTime), requireContext()))
     }
   }
 
@@ -148,7 +148,7 @@ class HomeFragment : Fragment() {
     FileUtil.copyFileFromAsset("strings.xml", "$projectDir/values")
     FileUtil.copyFileFromAsset("default_font.ttf", "$projectDir/font")
 
-    val project = ProjectFile(projectDir, time)
+    val project = ProjectFile(projectDir, time, requireContext())
     //((LayoutFile) getActivity().getIntent().getExtras().getParcelable(Constants.EXTRA_KEY_LAYOUT)).saveLayout("");
     project.createDefaultLayout()
     projects.add(project)

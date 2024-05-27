@@ -64,6 +64,7 @@ import java.io.File
 
 @SuppressLint("UnsafeOptInUsageError")
 class EditorActivity : BaseActivity() {
+
   private lateinit var binding: ActivityLayoutEditorBinding
 
   private lateinit var drawerLayout: DrawerLayout
@@ -82,7 +83,9 @@ class EditorActivity : BaseActivity() {
 
   private val onBackPressedCallback = object : OnBackPressedCallback(true) {
     override fun handleOnBackPressed() {
-      if (drawerLayout.isDrawerOpen(GravityCompat.START) || drawerLayout.isDrawerOpen(GravityCompat.END)) {
+      if (drawerLayout.isDrawerOpen(GravityCompat.START) || drawerLayout.isDrawerOpen(
+          GravityCompat.END)
+      ) {
         drawerLayout.closeDrawers()
       } else {
         val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
@@ -117,10 +120,21 @@ class EditorActivity : BaseActivity() {
 
     projectManager = ProjectManager.instance
 
-    project = projectManager.openedProject!!
+    projectManager.initManger(context = this)
 
-    supportActionBar?.title = project.name
-    layoutAdapter = LayoutListAdapter(project)
+    //todo extract file_key to layouteditor constants and use it in both modules.
+    //todo extract replace 0 date with actual value.
+    //todo extract replace activity_main date with actual value.
+    intent.getStringExtra("file_key")?.let {
+      projectManager.openProject(ProjectFile(it, "0", this, mainLayoutName = "activity_main"))
+
+      //todo remove !! from openedProject!!, and make actuall null check.
+      project = projectManager.openedProject!!
+
+      supportActionBar?.title = project.name
+      layoutAdapter = LayoutListAdapter(project)
+    } ?: showNothingDialog()
+
 
     binding.editorLayout.setBackgroundColor(
       Utils.getSurfaceColor(
@@ -152,10 +166,10 @@ class EditorActivity : BaseActivity() {
     xmlPicker =
       object : FilePicker(this) {
         override fun onPickFile(uri: Uri?) {
-         //if (FileUtil.isDownloadsDocument(uri)) {
-         //  make(binding.root, string.select_from_storage).showAsError()
-         //  return
-         //}
+          //if (FileUtil.isDownloadsDocument(uri)) {
+          //  make(binding.root, string.select_from_storage).showAsError()
+          //  return
+          //}
           val path = uri?.path
           if (path != null && path.endsWith(".xml")) {
             val xml = FileUtil.readFromUri(uri, this@EditorActivity)
@@ -377,7 +391,8 @@ class EditorActivity : BaseActivity() {
       R.id.import_xml -> {
         MaterialAlertDialogBuilder(this@EditorActivity)
           .setTitle(string.note)
-          .setMessage("*Be aware it will fail to import when you try to import the layout file with view, different from LayoutEditor view set!")
+          .setMessage(
+            "*Be aware it will fail to import when you try to import the layout file with view, different from LayoutEditor view set!")
           .setCancelable(false)
           .setNegativeButton(string.cancel) { d, _ -> d.cancel() }
           .setPositiveButton(string.okay) { _, _ -> xmlPicker!!.launch("text/xml") }
@@ -729,6 +744,7 @@ class EditorActivity : BaseActivity() {
   }
 
   companion object {
+
     const val ACTION_OPEN: String = "com.itsvks.layouteditor.open"
   }
 }
