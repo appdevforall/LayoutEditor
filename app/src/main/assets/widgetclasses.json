@@ -42,5 +42,6 @@
     "SeekBar": "com.itsvks.layouteditor.editor.palette.widgets.SeekBarDesign",
     "RatingBar": "com.itsvks.layouteditor.editor.palette.widgets.RatingBarDesign",
     "TextureView": "com.itsvks.layouteditor.editor.palette.widgets.TextureViewDesign",
-    "SurfaceView": "com.itsvks.layouteditor.editor.palette.widgets.SurfaceViewDesign"
+    "SurfaceView": "com.itsvks.layouteditor.editor.palette.widgets.SurfaceViewDesign",
+    "ConstraintLayout": "com.itsvks.layouteditor.editor.palette.layouts.ConstraintLayoutDesign"
 }
