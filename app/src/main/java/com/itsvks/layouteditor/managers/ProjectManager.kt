@@ -26,6 +26,7 @@ class ProjectManager private constructor() {
     fun openProject(project: ProjectFile?) {
         openedProject = project
         openedProject!!.drawables?.let { DrawableManager.loadFromFiles(it) }
+        openedProject!!.layoutDesigns // just for the sake of creating folder
         openedProject!!.fonts?.let {
             FontManager.loadFromFiles(it)
         }

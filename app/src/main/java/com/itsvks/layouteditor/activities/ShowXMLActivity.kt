@@ -39,19 +39,19 @@ class ShowXMLActivity : BaseActivity() {
       typefaceLineNumber = jetBrainsMono()
       isEditable = false
     }
-    try {
-      loadDefaultThemes()
-      ThemeRegistry.getInstance().setTheme("darcula")
-      loadDefaultLanguages()
-
-      ensureTextmateTheme()
-
-      val editor = binding!!.editor
-      val language = TextMateLanguage.create("text.xml", true)
-      editor.setEditorLanguage(language)
-    } catch (e: Exception) {
-      e.printStackTrace()
-    }
+//    try {
+//      loadDefaultThemes()
+//      ThemeRegistry.getInstance().setTheme("darcula")
+//      loadDefaultLanguages()
+//
+//      ensureTextmateTheme()
+//
+//      val editor = binding!!.editor
+//      val language = TextMateLanguage.create("text.xml", true)
+//      editor.setEditorLanguage(language)
+//    } catch (e: Exception) {
+//      e.printStackTrace()
+//    }
 
     binding!!.fab.setOnClickListener {
       ClipboardUtils.copyText(binding!!.editor.text.toString())

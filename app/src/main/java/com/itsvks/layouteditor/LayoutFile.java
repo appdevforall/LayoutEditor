@@ -29,6 +29,10 @@ public class LayoutFile implements Parcelable {
     name = FileUtil.getLastSegmentFromPath(path);
   }
 
+
+  public void deleteLayout() {
+    FileUtil.deleteFile(path);
+  }
   public void saveLayout(String content) {
     FileUtil.writeFile(path, content);
   }

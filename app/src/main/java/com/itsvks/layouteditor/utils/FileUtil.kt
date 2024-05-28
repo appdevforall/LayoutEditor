@@ -22,6 +22,8 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.URLDecoder
+import java.nio.file.Files
+import java.nio.file.Paths
 
 object FileUtil {
   fun readFromUri(uri: Uri, context: Context): String? {
@@ -234,6 +236,7 @@ object FileUtil {
   @JvmStatic
   fun writeFile(path: String, str: String?) {
     // Create a new file.
+    Files.createDirectories(Paths.get(path).parent)
     createNewFile(path)
     var fileWriter: FileWriter? = null
 

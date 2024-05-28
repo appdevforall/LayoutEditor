@@ -1,6 +1,7 @@
 package com.itsvks.layouteditor
 
 import android.content.Context
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
@@ -9,8 +10,12 @@ import com.itsvks.layouteditor.utils.Constants
 import com.itsvks.layouteditor.utils.FileUtil
 import org.jetbrains.annotations.Contract
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 
 class ProjectFile : Parcelable {
+
   var path: String
     private set
 
@@ -20,10 +25,11 @@ class ProjectFile : Parcelable {
   @JvmField
   var date: String? = null
 
-  private val mainLayoutName:String
-  private lateinit var preferencesManager:PreferencesManager
+  private val mainLayoutName: String
+  private lateinit var preferencesManager: PreferencesManager
 
-  constructor(path: String, date: String?, context: Context, mainLayoutName: String = "layout_main") {
+  constructor(path: String, date: String?, context: Context,
+    mainLayoutName: String = "layout_main") {
     this.path = path
     this.date = date
     this.name = FileUtil.getLastSegmentFromPath(path)
@@ -54,6 +60,8 @@ class ProjectFile : Parcelable {
 
   val layoutPath: String
     get() = "$path/layout/"
+  val layoutDesignPath: String
+    get() = "$path/layout/design/"
 
   val drawables: Array<out File>?
     get() {
@@ -86,15 +94,32 @@ class ProjectFile : Parcelable {
       return file.listFiles()
     }
 
+  val layoutDesigns: Array<out File>?
+    get() {
+      val file = File(layoutDesignPath)
+      if (!file.exists()) {
+        FileUtil.makeDir(layoutDesignPath)
+      }
+      return file.listFiles()
+    }
+
   val allLayouts: MutableList<LayoutFile>
     get() {
       val list: MutableList<LayoutFile> = mutableListOf()
-      layouts?.forEach { list.add(LayoutFile(it.absolutePath)) }
+      layoutDesigns?.forEach { list.add(LayoutFile(it.absolutePath)) }
       return list
     }
 
   val mainLayout: LayoutFile
     get() = LayoutFile("$path/layout/$mainLayoutName.xml")
+
+  val mainLayoutDesign: LayoutFile
+    get() {
+      Files.createDirectories(Paths.get(layoutDesignPath))
+      val file = File("$layoutDesignPath$mainLayoutName.xml")
+      file.createNewFile()
+      return LayoutFile("$layoutDesignPath$mainLayoutName.xml")
+    }
 
   var currentLayout: LayoutFile
     get() {
@@ -125,6 +150,7 @@ class ProjectFile : Parcelable {
   }
 
   companion object {
+
     @JvmField
     val CREATOR: Creator<ProjectFile> = object : Creator<ProjectFile> {
       @Contract("_ -> new")

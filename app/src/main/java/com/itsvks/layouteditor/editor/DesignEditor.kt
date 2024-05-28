@@ -86,6 +86,10 @@ class DesignEditor : LinearLayout {
   private var undoRedoManager: UndoRedoManager? = null
   private lateinit var preferencesManager: PreferencesManager
 
+
+  init {
+    initAttributes()
+  }
   constructor(context: Context) : super(context) {
     init(context)
   }
@@ -106,7 +110,7 @@ class DesignEditor : LinearLayout {
     viewType = ViewType.DESIGN
     isBlueprint = false
     deviceConfiguration = DeviceConfiguration(DeviceSize.LARGE)
-    initAttributes()
+    //initAttributes()
     shadow = View(context)
     paint = Paint()
 

@@ -122,14 +122,23 @@ class EditorActivity : BaseActivity() {
 
     projectManager.initManger(context = this)
 
+    defineFileCreator()
+    defineXmlPicker()
+    setupDrawerLayout()
+    setupStructureView()
+
+    setupDrawerNavigationRail()
+    setToolbarButtonOnClickListener(binding)
+
     //todo extract file_key to layouteditor constants and use it in both modules.
     //todo extract replace 0 date with actual value.
     //todo extract replace activity_main date with actual value.
     intent.getStringExtra("file_key")?.let {
-      projectManager.openProject(ProjectFile(it, "0", this, mainLayoutName = "activity_main"))
 
+      projectManager.openProject(ProjectFile(it, "0", this, mainLayoutName = "activity_main"))
       //todo remove !! from openedProject!!, and make actuall null check.
       project = projectManager.openedProject!!
+      androidToDesignConversion(Uri.fromFile(File(projectManager.openedProject?.mainLayout?.path ?: "")))
 
       supportActionBar?.title = project.name
       layoutAdapter = LayoutListAdapter(project)
@@ -142,15 +151,7 @@ class EditorActivity : BaseActivity() {
       )
     )
 
-    defineFileCreator()
-    defineXmlPicker()
-    setupDrawerLayout()
-    setupStructureView()
-
-    setupDrawerNavigationRail()
-    setToolbarButtonOnClickListener(binding)
-
-    openLayout(project.mainLayout)
+    //openLayout(LayoutFile(projectManager.openedProject?.mainLayout?.path))
 
 //    layoutAdapter.onClickListener = { openLayout(it) }
 //
@@ -172,21 +173,7 @@ class EditorActivity : BaseActivity() {
           //}
           val path = uri?.path
           if (path != null && path.endsWith(".xml")) {
-            val xml = FileUtil.readFromUri(uri, this@EditorActivity)
-            val xmlConverted = ConvertImportedXml(xml).getXmlConverted(this@EditorActivity)
-
-            if (xmlConverted != null) {
-              if (!File(project.layoutPath + FileUtil.getLastSegmentFromPath(path)).exists()) {
-                createNewLayout(FileUtil.getLastSegmentFromPath(path), xmlConverted)
-                make(binding.root, "Imported!").setFadeAnimation().showAsSuccess()
-              } else {
-                make(binding.root, "Layout Already Exists!").setFadeAnimation().showAsError()
-              }
-            } else {
-              make(binding.root, "Failed to import!")
-                .setSlideAnimation()
-                .showAsError()
-            }
+            androidToDesignConversion(uri)
           } else {
             Toast.makeText(
               this@EditorActivity,
@@ -196,6 +183,39 @@ class EditorActivity : BaseActivity() {
           }
         }
       }
+  }
+
+  private fun androidToDesignConversion(uri: Uri?) {
+    //if (FileUtil.isDownloadsDocument(uri)) {
+    //  make(binding.root, string.select_from_storage).showAsError()
+    //  return
+    //}
+    val path = uri?.path
+    if (path != null && path.endsWith(".xml")) {
+      val xml = FileUtil.readFromUri(uri, this@EditorActivity)
+      val xmlConverted = ConvertImportedXml(xml).getXmlConverted(this@EditorActivity)
+
+      if (xmlConverted != null) {
+        if (!File(project.layoutDesignPath + FileUtil.getLastSegmentFromPath(path)).exists()) {
+          createAndOpenNewDesignLayout(FileUtil.getLastSegmentFromPath(path), xmlConverted)
+          make(binding.root, "Imported!").setFadeAnimation().showAsSuccess()
+        } else {
+          createAndOpenNewDesignLayout(FileUtil.getLastSegmentFromPath(path), xmlConverted)
+          make(binding.root, "Imported!").setFadeAnimation().showAsSuccess()
+          //make(binding.root, "Layout Already Exists!").setFadeAnimation().showAsError()
+        }
+      } else {
+        make(binding.root, "Failed to import!")
+          .setSlideAnimation()
+          .showAsError()
+      }
+    } else {
+      Toast.makeText(
+        this@EditorActivity,
+        "Selected file is not an Android XML layout file",
+        Toast.LENGTH_SHORT
+      ).show()
+    }
   }
 
   private fun defineFileCreator() {
@@ -523,8 +543,9 @@ class EditorActivity : BaseActivity() {
     }
   }
 
-  fun createNewLayout(name: String, layoutContent: String?) {
-    val layoutFile = LayoutFile(project.layoutPath + name)
+  private fun createAndOpenNewDesignLayout(name: String, layoutContent: String?) {
+    val layoutFile = LayoutFile(project.layoutDesignPath + name)
+    layoutFile.deleteLayout()
     layoutFile.saveLayout(layoutContent)
     openLayout(layoutFile)
   }
@@ -560,7 +581,7 @@ class EditorActivity : BaseActivity() {
       string.cancel
     ) { _, _ -> }
     builder.setPositiveButton(string.create) { _, _ ->
-      createNewLayout(
+      createAndOpenNewDesignLayout(
         "${editText.getText().toString().replace(" ", "_").lowercase()}.xml", ""
       )
     }
