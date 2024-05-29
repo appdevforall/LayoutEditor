@@ -73,6 +73,10 @@ object Constants {
   const val EXTRA_KEY_PROJECT = "project"
   const val EXTRA_KEY_LAYOUT = "layout"
 
+  //Path and project keys when passed with intend from beyound
+  const val EXTRA_KEY_FILE_PATH = "EXTRA_KEY_FILE_PATH"
+  const val EXTRA_KEY_LAYOUT_FILE_NAME = "EXTRA_KEY_LAYOUT_FILE_NAME"
+
   init {
     gravityMap["left"] = Gravity.START
     gravityMap["right"] = Gravity.END

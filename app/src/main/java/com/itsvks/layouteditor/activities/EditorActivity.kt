@@ -59,6 +59,7 @@ import com.itsvks.layouteditor.utils.NameErrorChecker
 import com.itsvks.layouteditor.utils.SBUtils
 import com.itsvks.layouteditor.utils.SBUtils.Companion.make
 import com.itsvks.layouteditor.utils.Utils
+import com.itsvks.layouteditor.utils.doubleArgSafeLet
 import com.itsvks.layouteditor.views.CustomDrawerLayout
 import java.io.File
 
@@ -133,17 +134,16 @@ class EditorActivity : BaseActivity() {
     //todo extract file_key to layouteditor constants and use it in both modules.
     //todo extract replace 0 date with actual value.
     //todo extract replace activity_main date with actual value.
-    intent.getStringExtra("file_key")?.let {
-
-      projectManager.openProject(ProjectFile(it, "0", this, mainLayoutName = "activity_main"))
-      //todo remove !! from openedProject!!, and make actuall null check.
+    doubleArgSafeLet(intent.getStringExtra(Constants.EXTRA_KEY_FILE_PATH),
+      intent.getStringExtra(Constants.EXTRA_KEY_LAYOUT_FILE_NAME)) { filePath, fileName ->
+      projectManager.openProject(ProjectFile(filePath, "0", this, mainLayoutName = fileName))
       project = projectManager.openedProject!!
-      androidToDesignConversion(Uri.fromFile(File(projectManager.openedProject?.mainLayout?.path ?: "")))
+      androidToDesignConversion(
+        Uri.fromFile(File(projectManager.openedProject?.mainLayout?.path ?: "")))
 
       supportActionBar?.title = project.name
       layoutAdapter = LayoutListAdapter(project)
     } ?: showNothingDialog()
-
 
     binding.editorLayout.setBackgroundColor(
       Utils.getSurfaceColor(
