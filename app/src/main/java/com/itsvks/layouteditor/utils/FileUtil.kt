@@ -433,10 +433,10 @@ object FileUtil {
    * @return Returns the File Path of Uri
    */
   @JvmStatic
-  fun convertUriToFilePath(uri: Uri): String {
+  fun convertUriToFilePath(context: Context, uri: Uri): String {
     var path = ""
     // Check if the Uri is provided by documents contract
-    if (DocumentsContract.isDocumentUri(instance!!.context, uri)) {
+    if (DocumentsContract.isDocumentUri(context, uri)) {
       // Check if Uri is External Storage Document
       if (isExternalStorageDocument(uri)) {
         val docId = DocumentsContract.getDocumentId(uri)
@@ -642,11 +642,11 @@ object FileUtil {
    * @param data Data to be written in the file
    * @return boolean True if file is saved successfully, else false
    */
-  fun saveFile(uri: Uri, data: String): Boolean {
+  fun saveFile(context: Context, uri: Uri, data: String): Boolean {
     try {
       // Open the file descriptor in read-write-truncate mode
       val pfd =
-        instance!!.context.contentResolver.openFileDescriptor(uri, "rwt")
+        context.contentResolver.openFileDescriptor(uri, "rwt")
       // Initialize file output stream with the file descriptor
       val fos = FileOutputStream(pfd!!.fileDescriptor)
       // Write the data in the file

@@ -138,7 +138,7 @@ public class DrawableFragment extends Fragment {
   }
 
   public void addDrawable(Uri uri) {
-    final String path = FileUtil.convertUriToFilePath(uri);
+    final String path = FileUtil.convertUriToFilePath(this.getContext(),uri);
     if (TextUtils.isEmpty(path)) {
       ToastUtils.showLong(R.string.invalid_data_intent);
       return;

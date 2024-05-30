@@ -224,13 +224,14 @@ class EditorActivity : BaseActivity() {
         override fun onCreateFile(uri: Uri) {
           val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
 
-          if (FileUtil.saveFile(uri, result)) make(binding.root, "Success!").setSlideAnimation()
+          if (FileUtil.saveFile(this@EditorActivity, uri, result)) make(binding.root,
+            "Success!").setSlideAnimation()
             .showAsSuccess()
           else {
             make(binding.root, "Failed to save!")
               .setSlideAnimation()
               .showAsError()
-            FileUtil.deleteFile(FileUtil.convertUriToFilePath(uri))
+            FileUtil.deleteFile(FileUtil.convertUriToFilePath(this@EditorActivity, uri))
           }
         }
       }
@@ -391,7 +392,18 @@ class EditorActivity : BaseActivity() {
       }
 
       R.id.export_xml -> {
-        fileCreator!!.create(projectManager.formattedProjectName, "text/xml")
+        val uri = Uri.fromFile(File(project.currentLayout.path))
+        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+
+        if (FileUtil.saveFile(this@EditorActivity, uri, result)) {
+          make(binding.root, "Success!").setSlideAnimation().showAsSuccess()
+        } else {
+          make(binding.root, "Failed to save!")
+            .setSlideAnimation()
+            .showAsError()
+          FileUtil.deleteFile(FileUtil.convertUriToFilePath(this@EditorActivity, uri))
+        }
+
         return true
       }
 
@@ -544,15 +556,16 @@ class EditorActivity : BaseActivity() {
   }
 
   private fun createAndOpenNewDesignLayout(name: String, layoutContent: String?) {
-    val layoutFile = LayoutFile(project.layoutDesignPath + name)
+    val layoutFile = LayoutFile(project.layoutPath + name, project.layoutDesignPath + name)
     layoutFile.deleteLayout()
     layoutFile.saveLayout(layoutContent)
     openLayout(layoutFile)
   }
 
   private fun openLayout(layoutFile: LayoutFile) {
-    binding.editorLayout.loadLayoutFromParser(layoutFile.read())
+    binding.editorLayout.loadLayoutFromParser(layoutFile.readDesignFile())
     project.currentLayout = layoutFile
+    project.currentLayoutDesign = layoutFile
     supportActionBar!!.subtitle = layoutFile.name
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START)
@@ -657,13 +670,10 @@ class EditorActivity : BaseActivity() {
     builder.setPositiveButton(
       string.rename
     ) { _, _ ->
+      val designPath: String = layouts[pos].designPath
       val path: String = layouts[pos].path
-      val newPath = "${path.substring(0, path.lastIndexOf("/"))}/${
-        editText.text.toString().replace(" ", "_").lowercase()
-      }.xml"
-      layouts[pos].rename(newPath)
-      if (layouts[pos] === project.currentLayout) openLayout(layouts[pos])
-      layoutAdapter.notifyItemChanged(pos)
+      renameLayout(designPath, editText, layouts, pos)
+      renameLayout(path, editText, layouts, pos)
     }
 
     val dialog: AlertDialog = builder.create()
@@ -704,6 +714,22 @@ class EditorActivity : BaseActivity() {
     }
   }
 
+  private fun renameLayout(layouts: MutableList<LayoutFile>,
+    pos: Int, editText: TextInputEditText) {
+
+  }
+
+  private fun renameLayout(path: String,
+    editText: TextInputEditText,
+    layouts: MutableList<LayoutFile>, pos: Int) {
+    val newPath = "${path.substring(0, path.lastIndexOf("/"))}/${
+      editText.text.toString().replace(" ", "_").lowercase()
+    }.xml"
+    layouts[pos].rename(newPath, "test")
+    if (layouts[pos] === project.currentLayout) openLayout(layouts[pos])
+    layoutAdapter.notifyItemChanged(pos)
+  }
+
   @SuppressLint("NotifyDataSetChanged")
   fun deleteLayout(pos: Int) {
     val layouts = project.allLayouts
@@ -716,11 +742,11 @@ class EditorActivity : BaseActivity() {
     builder.setPositiveButton(
       string.yes
     ) { _, _ ->
-      if (layouts[pos].path == project.mainLayout.path) {
+      if (layouts[pos].designPath == project.mainLayout.designPath) {
         ToastUtils.showShort("You can't delete main layout.")
         return@setPositiveButton
       }
-      FileUtil.deleteFile(layouts[pos].path)
+      FileUtil.deleteFile(layouts[pos].designPath)
       if (layouts[pos] === project.currentLayout) openLayout(project.mainLayout)
       layouts.remove(layouts[pos])
       layoutAdapter.notifyItemRemoved(pos)

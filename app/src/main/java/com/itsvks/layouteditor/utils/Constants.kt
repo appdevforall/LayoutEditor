@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 
 object Constants {
   const val CURRENT_LAYOUT: String = "currentLayout"
+  const val CURRENT_LAYOUT_DESIGN: String = "currentLayoutDesign"
 
   @JvmField
   val gravityMap = HashMap<String, Int>()

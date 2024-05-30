@@ -75,7 +75,7 @@ public class FontFragment extends Fragment {
   }
 
   public void addFont(final Uri uri) {
-    String path = FileUtil.convertUriToFilePath(uri);
+    String path = FileUtil.convertUriToFilePath(this.getContext(),uri);
     if (TextUtils.isEmpty(path)) {
       ToastUtils.showLong(R.string.invalid_data_intent);
       return;

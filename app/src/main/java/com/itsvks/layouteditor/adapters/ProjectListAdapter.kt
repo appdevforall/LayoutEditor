@@ -258,7 +258,7 @@ class ProjectListAdapter(private val projects: MutableList<ProjectFile>) :
       ) { d, w ->
         val intent = Intent(v.context, PreviewLayoutActivity::class.java)
         intent.putExtra(Constants.EXTRA_KEY_LAYOUT, allLayouts[w])
-        if (allLayouts[w].read().isEmpty()) {
+        if (allLayouts[w].readDesignFile().isEmpty()) {
           make(v, layouts[w] + " is empty...").setFadeAnimation().showAsError()
         } else v.context.startActivity(intent)
         d.dismiss()

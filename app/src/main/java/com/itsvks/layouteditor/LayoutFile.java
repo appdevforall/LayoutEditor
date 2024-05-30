@@ -12,41 +12,57 @@ import org.jetbrains.annotations.Contract;
 import java.io.File;
 
 public class LayoutFile implements Parcelable {
+
   private String path;
+  private String designPath;
   public String name;
 
-  public LayoutFile(String path) {
+  public LayoutFile(String path, String designPath) {
     this.path = path;
-    this.name = FileUtil.getLastSegmentFromPath(path);
+    this.designPath = designPath;
+    this.name = FileUtil.getLastSegmentFromPath(designPath);
   }
 
-  public void rename(String newPath) {
-    File newFile = new File(newPath);
-    File oldFile = new File(getPath());
+  //todo untested.
+  public void rename(String newPath, String newDesignPah) {
+    File newDesignFile = new File(newPath);
+    File oldDesignFile = new File(getDesignPath());
+    oldDesignFile.renameTo(newDesignFile);
+
+    File newFile = new File(newDesignPah);
+    File oldFile = new File(getDesignPath());
     oldFile.renameTo(newFile);
 
+    designPath = newPath;
     path = newPath;
-    name = FileUtil.getLastSegmentFromPath(path);
+    name = FileUtil.getLastSegmentFromPath(designPath);
   }
 
 
+  //todo currently delites only the design file, not the actual xml file.
   public void deleteLayout() {
-    FileUtil.deleteFile(path);
+    FileUtil.deleteFile(designPath);
   }
+
+  //todo currently only saves design file
   public void saveLayout(String content) {
-    FileUtil.writeFile(path, content);
+    FileUtil.writeFile(designPath, content);
   }
 
   public String getPath() {
     return path;
   }
 
+  public String getDesignPath() {
+    return designPath;
+  }
+
   public String getName() {
     return name;
   }
 
-  public String read() {
-    return FileUtil.readFile(path);
+  public String readDesignFile() {
+    return FileUtil.readFile(designPath);
   }
 
   @Override
@@ -56,6 +72,7 @@ public class LayoutFile implements Parcelable {
 
   @Override
   public void writeToParcel(@NonNull Parcel parcel, int flags) {
+    parcel.writeString(designPath);
     parcel.writeString(path);
     parcel.writeString(name);
   }
@@ -76,6 +93,7 @@ public class LayoutFile implements Parcelable {
     };
 
   private LayoutFile(@NonNull Parcel parcel) {
+    designPath = parcel.readString();
     path = parcel.readString();
     name = parcel.readString();
   }
