@@ -89,23 +89,23 @@ class EditorActivity : BaseActivity() {
       ) {
         drawerLayout.closeDrawers()
       } else {
-        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
-        if (result.isNotEmpty()) {
-          MaterialAlertDialogBuilder(this@EditorActivity)
-            .setTitle(string.title_save_layout)
-            .setMessage(string.msg_save_layout)
-            .setPositiveButton(string.yes) { _, _ ->
-              saveXml()
-              finishAfterTransition()
-            }
-            .setNegativeButton(string.no) { _, _ -> finishAfterTransition() }
-            .show()
-        } else {
-          finishAfterTransition()
-        }
+//        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+//        if (result.isNotEmpty()) {
+//          MaterialAlertDialogBuilder(this@EditorActivity)
+//            .setTitle(string.title_save_layout)
+//            .setMessage(string.msg_save_layout)
+//            .setPositiveButton(string.yes) { _, _ ->
+//              saveXml()
+//              finishAfterTransition()
+//            }
+//            .setNegativeButton(string.no) { _, _ -> finishAfterTransition() }
+//            .show()
+//        } else {
+        finishAfterTransition()
       }
     }
   }
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
