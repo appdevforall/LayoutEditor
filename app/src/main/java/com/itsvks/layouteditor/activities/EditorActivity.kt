@@ -557,7 +557,7 @@ class EditorActivity : BaseActivity() {
 
   private fun createAndOpenNewDesignLayout(name: String, layoutContent: String?) {
     val layoutFile = LayoutFile(project.layoutPath + name, project.layoutDesignPath + name)
-    layoutFile.deleteLayout()
+    layoutFile.deleteDesignLayout()
     layoutFile.saveLayout(layoutContent)
     openLayout(layoutFile)
   }
@@ -712,11 +712,6 @@ class EditorActivity : BaseActivity() {
     if (editText.text.toString().isNotEmpty()) {
       editText.setSelection(0, editText.text.toString().length)
     }
-  }
-
-  private fun renameLayout(layouts: MutableList<LayoutFile>,
-    pos: Int, editText: TextInputEditText) {
-
   }
 
   private fun renameLayout(path: String,

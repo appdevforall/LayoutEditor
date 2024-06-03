@@ -40,7 +40,7 @@ public class LayoutFile implements Parcelable {
 
 
   //todo currently delites only the design file, not the actual xml file.
-  public void deleteLayout() {
+  public void deleteDesignLayout() {
     FileUtil.deleteFile(designPath);
   }
 
