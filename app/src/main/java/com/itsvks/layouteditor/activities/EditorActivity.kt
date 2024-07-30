@@ -32,6 +32,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+
 import com.itsvks.layouteditor.BaseActivity
 import com.itsvks.layouteditor.LayoutFile
 import com.itsvks.layouteditor.ProjectFile
@@ -361,7 +362,7 @@ class EditorActivity : BaseActivity() {
       }
 
       R.id.save_xml -> {
-        saveXml()
+        //saveXml()
         return true
       }
 

@@ -97,5 +97,6 @@ dependencies {
 
     implementation(projects.layouteditor.vectormaster)
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
+    //causes strict mode violation
+    // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
 }
