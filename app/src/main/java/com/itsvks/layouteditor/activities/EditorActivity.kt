@@ -2,6 +2,7 @@ package com.itsvks.layouteditor.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
@@ -32,6 +33,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.itsaky.androidide.utils.OrientationUtilities
 
 import com.itsvks.layouteditor.BaseActivity
 import com.itsvks.layouteditor.LayoutFile
@@ -106,7 +108,6 @@ class EditorActivity : BaseActivity() {
       }
     }
   }
-
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

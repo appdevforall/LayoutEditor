@@ -96,6 +96,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.15.1'
 
     implementation(projects.layouteditor.vectormaster)
+    implementation(projects.common)
 
     //causes strict mode violation
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'

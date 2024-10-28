@@ -1,18 +1,22 @@
 package com.itsvks.layouteditor
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.elevation.SurfaceColors
+import com.itsaky.androidide.utils.OrientationUtilities
 import java.lang.ref.WeakReference
 
 open class BaseActivity : AppCompatActivity() {
   var app: LayoutEditor? = null
   private lateinit var ctx: WeakReference<Context?>
 
+  @SuppressLint("SourceLockedOrientationActivity")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     instance = this
@@ -20,6 +24,9 @@ open class BaseActivity : AppCompatActivity() {
     Thread.setDefaultUncaughtExceptionHandler(CrashHandler(ctx))
     app = LayoutEditor.instance
     window.statusBarColor = SurfaceColors.SURFACE_0.getColor(this)
+    OrientationUtilities.setOrientation {
+      requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
   }
 
   fun openUrl(url: String) {
