@@ -134,4 +134,5 @@
   <string name="msg_symbol_not_allowed">这个名字不能包含符号。</string>
   <string name="title_save_layout">保存布局</string>
   <string name="msg_save_layout">您想保存布局吗？</string>
+  <string name="save_layout_message" >您要导出布局还是图像</string>
 </resources>

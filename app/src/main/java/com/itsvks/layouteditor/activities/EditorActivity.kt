@@ -69,29 +69,30 @@ import java.io.File
 @SuppressLint("UnsafeOptInUsageError")
 class EditorActivity : BaseActivity() {
 
-  private lateinit var binding: ActivityLayoutEditorBinding
+    private lateinit var binding: ActivityLayoutEditorBinding
 
-  private lateinit var drawerLayout: DrawerLayout
-  private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
+    private lateinit var drawerLayout: DrawerLayout
+    private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
 
-  private lateinit var projectManager: ProjectManager
-  private lateinit var project: ProjectFile
+    private lateinit var projectManager: ProjectManager
+    private lateinit var project: ProjectFile
 
-  private var undoRedo: UndoRedoManager? = null
-  private var fileCreator: FileCreator? = null
-  private var xmlPicker: FilePicker? = null
+    private var undoRedo: UndoRedoManager? = null
+    private var fileCreator: FileCreator? = null
+    private var xmlPicker: FilePicker? = null
 
-  private lateinit var layoutAdapter: LayoutListAdapter
+    private lateinit var layoutAdapter: LayoutListAdapter
 
-  private val updateMenuIconsState: Runnable = Runnable { undoRedo!!.updateButtons() }
+    private val updateMenuIconsState: Runnable = Runnable { undoRedo!!.updateButtons() }
 
-  private val onBackPressedCallback = object : OnBackPressedCallback(true) {
-    override fun handleOnBackPressed() {
-      if (drawerLayout.isDrawerOpen(GravityCompat.START) || drawerLayout.isDrawerOpen(
-          GravityCompat.END)
-      ) {
-        drawerLayout.closeDrawers()
-      } else {
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START) || drawerLayout.isDrawerOpen(
+                    GravityCompat.END
+                )
+            ) {
+                drawerLayout.closeDrawers()
+            } else {
 //        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
 //        if (result.isNotEmpty()) {
 //          MaterialAlertDialogBuilder(this@EditorActivity)
@@ -104,56 +105,59 @@ class EditorActivity : BaseActivity() {
 //            .setNegativeButton(string.no) { _, _ -> finishAfterTransition() }
 //            .show()
 //        } else {
-        finishAfterTransition()
-      }
+                finishAfterTransition()
+            }
+        }
     }
-  }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    init()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        init()
+    }
 
-  private fun init() {
-    binding = ActivityLayoutEditorBinding.inflate(layoutInflater)
+    private fun init() {
+        binding = ActivityLayoutEditorBinding.inflate(layoutInflater)
 
-    setContentView(binding.root)
-    setSupportActionBar(binding.topAppBar)
-    onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        setContentView(binding.root)
+        setSupportActionBar(binding.topAppBar)
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
-    projectManager = ProjectManager.instance
+        projectManager = ProjectManager.instance
 
-    projectManager.initManger(context = this)
+        projectManager.initManger(context = this)
 
-    defineFileCreator()
-    defineXmlPicker()
-    setupDrawerLayout()
-    setupStructureView()
+        defineFileCreator()
+        defineXmlPicker()
+        setupDrawerLayout()
+        setupStructureView()
 
-    setupDrawerNavigationRail()
-    setToolbarButtonOnClickListener(binding)
+        setupDrawerNavigationRail()
+        setToolbarButtonOnClickListener(binding)
 
-    //todo extract file_key to layouteditor constants and use it in both modules.
-    //todo extract replace 0 date with actual value.
-    //todo extract replace activity_main date with actual value.
-    doubleArgSafeLet(intent.getStringExtra(Constants.EXTRA_KEY_FILE_PATH),
-      intent.getStringExtra(Constants.EXTRA_KEY_LAYOUT_FILE_NAME)) { filePath, fileName ->
-      projectManager.openProject(ProjectFile(filePath, "0", this, mainLayoutName = fileName))
-      project = projectManager.openedProject!!
-      androidToDesignConversion(
-        Uri.fromFile(File(projectManager.openedProject?.mainLayout?.path ?: "")))
+        //todo extract file_key to layouteditor constants and use it in both modules.
+        //todo extract replace 0 date with actual value.
+        //todo extract replace activity_main date with actual value.
+        doubleArgSafeLet(
+            intent.getStringExtra(Constants.EXTRA_KEY_FILE_PATH),
+            intent.getStringExtra(Constants.EXTRA_KEY_LAYOUT_FILE_NAME)
+        ) { filePath, fileName ->
+            projectManager.openProject(ProjectFile(filePath, "0", this, mainLayoutName = fileName))
+            project = projectManager.openedProject!!
+            androidToDesignConversion(
+                Uri.fromFile(File(projectManager.openedProject?.mainLayout?.path ?: ""))
+            )
 
-      supportActionBar?.title = project.name
-      layoutAdapter = LayoutListAdapter(project)
-    } ?: showNothingDialog()
+            supportActionBar?.title = project.name
+            layoutAdapter = LayoutListAdapter(project)
+        } ?: showNothingDialog()
 
-    binding.editorLayout.setBackgroundColor(
-      Utils.getSurfaceColor(
-        this
-      )
-    )
+        binding.editorLayout.setBackgroundColor(
+            Utils.getSurfaceColor(
+                this
+            )
+        )
 
-    //openLayout(LayoutFile(projectManager.openedProject?.mainLayout?.path))
+        //openLayout(LayoutFile(projectManager.openedProject?.mainLayout?.path))
 
 //    layoutAdapter.onClickListener = { openLayout(it) }
 //
@@ -163,632 +167,683 @@ class EditorActivity : BaseActivity() {
 //      } else showLayoutListOptions(view, position)
 //      true
 //    }
-  }
+    }
 
-  private fun defineXmlPicker() {
-    xmlPicker =
-      object : FilePicker(this) {
-        override fun onPickFile(uri: Uri?) {
-          //if (FileUtil.isDownloadsDocument(uri)) {
-          //  make(binding.root, string.select_from_storage).showAsError()
-          //  return
-          //}
-          val path = uri?.path
-          if (path != null && path.endsWith(".xml")) {
-            androidToDesignConversion(uri)
-          } else {
+    private fun defineXmlPicker() {
+        xmlPicker =
+            object : FilePicker(this) {
+                override fun onPickFile(uri: Uri?) {
+                    //if (FileUtil.isDownloadsDocument(uri)) {
+                    //  make(binding.root, string.select_from_storage).showAsError()
+                    //  return
+                    //}
+                    val path = uri?.path
+                    if (path != null && path.endsWith(".xml")) {
+                        androidToDesignConversion(uri)
+                    } else {
+                        Toast.makeText(
+                            this@EditorActivity,
+                            "Selected file is not an Android XML layout file",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+    }
+
+    private fun androidToDesignConversion(uri: Uri?) {
+        //if (FileUtil.isDownloadsDocument(uri)) {
+        //  make(binding.root, string.select_from_storage).showAsError()
+        //  return
+        //}
+        val path = uri?.path
+        if (path != null && path.endsWith(".xml")) {
+            val xml = FileUtil.readFromUri(uri, this@EditorActivity)
+            val xmlConverted = ConvertImportedXml(xml).getXmlConverted(this@EditorActivity)
+
+            if (xmlConverted != null) {
+                if (!File(project.layoutDesignPath + FileUtil.getLastSegmentFromPath(path)).exists()) {
+                    createAndOpenNewDesignLayout(
+                        FileUtil.getLastSegmentFromPath(path),
+                        xmlConverted
+                    )
+                    make(binding.root, "Imported!").setFadeAnimation().showAsSuccess()
+                } else {
+                    createAndOpenNewDesignLayout(
+                        FileUtil.getLastSegmentFromPath(path),
+                        xmlConverted
+                    )
+                    make(binding.root, "Imported!").setFadeAnimation().showAsSuccess()
+                    //make(binding.root, "Layout Already Exists!").setFadeAnimation().showAsError()
+                }
+            } else {
+                make(binding.root, "Failed to import!")
+                    .setSlideAnimation()
+                    .showAsError()
+            }
+        } else {
             Toast.makeText(
-              this@EditorActivity,
-              "Selected file is not an Android XML layout file",
-              Toast.LENGTH_SHORT
+                this@EditorActivity,
+                "Selected file is not an Android XML layout file",
+                Toast.LENGTH_SHORT
             ).show()
-          }
         }
-      }
-  }
-
-  private fun androidToDesignConversion(uri: Uri?) {
-    //if (FileUtil.isDownloadsDocument(uri)) {
-    //  make(binding.root, string.select_from_storage).showAsError()
-    //  return
-    //}
-    val path = uri?.path
-    if (path != null && path.endsWith(".xml")) {
-      val xml = FileUtil.readFromUri(uri, this@EditorActivity)
-      val xmlConverted = ConvertImportedXml(xml).getXmlConverted(this@EditorActivity)
-
-      if (xmlConverted != null) {
-        if (!File(project.layoutDesignPath + FileUtil.getLastSegmentFromPath(path)).exists()) {
-          createAndOpenNewDesignLayout(FileUtil.getLastSegmentFromPath(path), xmlConverted)
-          make(binding.root, "Imported!").setFadeAnimation().showAsSuccess()
-        } else {
-          createAndOpenNewDesignLayout(FileUtil.getLastSegmentFromPath(path), xmlConverted)
-          make(binding.root, "Imported!").setFadeAnimation().showAsSuccess()
-          //make(binding.root, "Layout Already Exists!").setFadeAnimation().showAsError()
-        }
-      } else {
-        make(binding.root, "Failed to import!")
-          .setSlideAnimation()
-          .showAsError()
-      }
-    } else {
-      Toast.makeText(
-        this@EditorActivity,
-        "Selected file is not an Android XML layout file",
-        Toast.LENGTH_SHORT
-      ).show()
     }
-  }
 
-  private fun defineFileCreator() {
-    fileCreator =
-      object : FileCreator(this) {
-        override fun onCreateFile(uri: Uri) {
-          val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+    private fun defineFileCreator() {
+        fileCreator =
+            object : FileCreator(this) {
+                override fun onCreateFile(uri: Uri) {
+                    val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
 
-          if (FileUtil.saveFile(this@EditorActivity, uri, result)) make(binding.root,
-            "Success!").setSlideAnimation()
-            .showAsSuccess()
-          else {
-            make(binding.root, "Failed to save!")
-              .setSlideAnimation()
-              .showAsError()
-            FileUtil.deleteFile(FileUtil.convertUriToFilePath(this@EditorActivity, uri))
-          }
-        }
-      }
-  }
-
-  private fun setupDrawerLayout() {
-    drawerLayout = binding.drawer
-    actionBarDrawerToggle =
-      ActionBarDrawerToggle(
-        this, drawerLayout, binding.topAppBar, string.palette, string.palette
-      )
-
-    (drawerLayout as CustomDrawerLayout).addDrawerListener(actionBarDrawerToggle!!)
-    actionBarDrawerToggle!!.syncState()
-    (drawerLayout as CustomDrawerLayout).addDrawerListener(
-      object : DrawerLayout.SimpleDrawerListener() {
-        override fun onDrawerStateChanged(state: Int) {
-          super.onDrawerStateChanged(state)
-          undoRedo!!.updateButtons()
-        }
-
-        override fun onDrawerSlide(v: View, slideOffset: Float) {
-          super.onDrawerSlide(v, slideOffset)
-          undoRedo!!.updateButtons()
-        }
-
-        override fun onDrawerClosed(v: View) {
-          super.onDrawerClosed(v)
-          undoRedo!!.updateButtons()
-        }
-
-        override fun onDrawerOpened(v: View) {
-          super.onDrawerOpened(v)
-          undoRedo!!.updateButtons()
-        }
-      })
-  }
-
-  private fun setupStructureView() {
-    binding.editorLayout.setStructureView(binding.structureView)
-
-    binding.structureView.onItemClickListener = {
-      binding.editorLayout.showDefinedAttributes(it)
-      drawerLayout.closeDrawer(GravityCompat.END)
+                    if (FileUtil.saveFile(this@EditorActivity, uri, result)) make(
+                        binding.root,
+                        "Success!"
+                    ).setSlideAnimation()
+                        .showAsSuccess()
+                    else {
+                        make(binding.root, "Failed to save!")
+                            .setSlideAnimation()
+                            .showAsError()
+                        FileUtil.deleteFile(FileUtil.convertUriToFilePath(this@EditorActivity, uri))
+                    }
+                }
+            }
     }
-  }
 
-  @SuppressLint("SetTextI18n")
-  private fun setupDrawerNavigationRail() {
-    val fab = binding.paletteNavigation.headerView?.findViewById<FloatingActionButton>(R.id.fab)
+    private fun setupDrawerLayout() {
+        drawerLayout = binding.drawer
+        actionBarDrawerToggle =
+            ActionBarDrawerToggle(
+                this, drawerLayout, binding.topAppBar, string.palette, string.palette
+            )
 
-    val paletteMenu = binding.paletteNavigation.menu
-    paletteMenu.add(Menu.NONE, 0, Menu.NONE, Constants.TAB_TITLE_COMMON).setIcon(R.drawable.android)
-    paletteMenu.add(Menu.NONE, 1, Menu.NONE, Constants.TAB_TITLE_TEXT)
-      .setIcon(R.mipmap.ic_palette_text_view)
-    paletteMenu.add(Menu.NONE, 2, Menu.NONE, Constants.TAB_TITLE_BUTTONS)
-      .setIcon(R.mipmap.ic_palette_button)
-    paletteMenu.add(Menu.NONE, 3, Menu.NONE, Constants.TAB_TITLE_WIDGETS)
-      .setIcon(R.mipmap.ic_palette_view)
-    paletteMenu.add(Menu.NONE, 4, Menu.NONE, Constants.TAB_TITLE_LAYOUTS)
-      .setIcon(R.mipmap.ic_palette_relative_layout)
-    paletteMenu.add(Menu.NONE, 5, Menu.NONE, Constants.TAB_TITLE_CONTAINERS)
-      .setIcon(R.mipmap.ic_palette_view_pager)
-    paletteMenu.add(Menu.NONE, 6, Menu.NONE, Constants.TAB_TITLE_LEGACY)
-      .setIcon(R.mipmap.ic_palette_grid_layout)
+        (drawerLayout as CustomDrawerLayout).addDrawerListener(actionBarDrawerToggle!!)
+        actionBarDrawerToggle!!.syncState()
+        (drawerLayout as CustomDrawerLayout).addDrawerListener(
+            object : DrawerLayout.SimpleDrawerListener() {
+                override fun onDrawerStateChanged(state: Int) {
+                    super.onDrawerStateChanged(state)
+                    undoRedo!!.updateButtons()
+                }
 
-    binding.listView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+                override fun onDrawerSlide(v: View, slideOffset: Float) {
+                    super.onDrawerSlide(v, slideOffset)
+                    undoRedo!!.updateButtons()
+                }
 
-    val adapter = PaletteListAdapter(binding.drawer)
-    adapter.submitPaletteList(projectManager.getPalette(0))
+                override fun onDrawerClosed(v: View) {
+                    super.onDrawerClosed(v)
+                    undoRedo!!.updateButtons()
+                }
 
-    binding.paletteNavigation.setOnItemSelectedListener { item: MenuItem ->
-      adapter.submitPaletteList(projectManager.getPalette(item.itemId))
-      binding.paletteText.text = "Palette"
-      binding.title.text = item.title
-      replaceListViewAdapter(adapter)
-      if (fab != null) {
-        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.folder_outline))
-        TooltipCompat.setTooltipText(fab, "Layouts")
-      }
-      true
+                override fun onDrawerOpened(v: View) {
+                    super.onDrawerOpened(v)
+                    undoRedo!!.updateButtons()
+                }
+            })
     }
-    replaceListViewAdapter(adapter)
 
-    fab?.setOnClickListener {
-      if (binding.listView.adapter is LayoutListAdapter) {
-        createLayout()
-      } else {
-        replaceListViewAdapter(layoutAdapter)
-        binding.title.text = getString(string.layouts)
-        binding.paletteText.text = project.name
-        // binding.paletteNavigation.getMenu().getItem(binding.paletteNavigation.getSelectedItemId()).setChecked(false);
-        fab.setImageResource(R.drawable.plus)
-        TooltipCompat.setTooltipText(fab, "Create new layout")
-      }
-    }
-    clear()
-  }
+    private fun setupStructureView() {
+        binding.editorLayout.setStructureView(binding.structureView)
 
-  private fun replaceListViewAdapter(adapter: RecyclerView.Adapter<*>) {
-    binding.listView.adapter = adapter
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    val id = item.itemId
-    undoRedo!!.updateButtons()
-    if (actionBarDrawerToggle!!.onOptionsItemSelected(item)) return true
-    when (id) {
-      android.R.id.home -> {
-        drawerLayout.openDrawer(GravityCompat.START)
-        return true
-      }
-
-      R.id.undo -> {
-        binding.editorLayout.undo()
-        return true
-      }
-
-      R.id.redo -> {
-        binding.editorLayout.redo()
-        return true
-      }
-
-      R.id.show_structure -> {
-        drawerLayout.openDrawer(GravityCompat.END)
-        return true
-      }
-
-      R.id.save_xml -> {
-        //saveXml()
-        return true
-      }
-
-      R.id.edit_xml -> {
-        showXml()
-        return true
-      }
-
-      R.id.resources_manager -> {
-        startActivity(
-          Intent(this, ResourceManagerActivity::class.java)
-            .putExtra(Constants.EXTRA_KEY_PROJECT, project)
-        )
-        return true
-      }
-
-      R.id.preview -> {
-        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
-        if (result.isEmpty()) showNothingDialog()
-        else {
-          saveXml()
-          startActivity(
-            Intent(this, PreviewLayoutActivity::class.java)
-              .putExtra(Constants.EXTRA_KEY_LAYOUT, project.currentLayout)
-          )
+        binding.structureView.onItemClickListener = {
+            binding.editorLayout.showDefinedAttributes(it)
+            drawerLayout.closeDrawer(GravityCompat.END)
         }
-        return true
-      }
+    }
 
-      R.id.export_xml -> {
-        val uri = Uri.fromFile(File(project.currentLayout.path))
-        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+    @SuppressLint("SetTextI18n")
+    private fun setupDrawerNavigationRail() {
+        val fab = binding.paletteNavigation.headerView?.findViewById<FloatingActionButton>(R.id.fab)
 
-        if (FileUtil.saveFile(this@EditorActivity, uri, result)) {
-          make(binding.root, "Success!").setSlideAnimation().showAsSuccess()
-        } else {
-          make(binding.root, "Failed to save!")
-            .setSlideAnimation()
-            .showAsError()
-          FileUtil.deleteFile(FileUtil.convertUriToFilePath(this@EditorActivity, uri))
+        val paletteMenu = binding.paletteNavigation.menu
+        paletteMenu.add(Menu.NONE, 0, Menu.NONE, Constants.TAB_TITLE_COMMON)
+            .setIcon(R.drawable.android)
+        paletteMenu.add(Menu.NONE, 1, Menu.NONE, Constants.TAB_TITLE_TEXT)
+            .setIcon(R.mipmap.ic_palette_text_view)
+        paletteMenu.add(Menu.NONE, 2, Menu.NONE, Constants.TAB_TITLE_BUTTONS)
+            .setIcon(R.mipmap.ic_palette_button)
+        paletteMenu.add(Menu.NONE, 3, Menu.NONE, Constants.TAB_TITLE_WIDGETS)
+            .setIcon(R.mipmap.ic_palette_view)
+        paletteMenu.add(Menu.NONE, 4, Menu.NONE, Constants.TAB_TITLE_LAYOUTS)
+            .setIcon(R.mipmap.ic_palette_relative_layout)
+        paletteMenu.add(Menu.NONE, 5, Menu.NONE, Constants.TAB_TITLE_CONTAINERS)
+            .setIcon(R.mipmap.ic_palette_view_pager)
+        paletteMenu.add(Menu.NONE, 6, Menu.NONE, Constants.TAB_TITLE_LEGACY)
+            .setIcon(R.mipmap.ic_palette_grid_layout)
+
+        binding.listView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val adapter = PaletteListAdapter(binding.drawer)
+        adapter.submitPaletteList(projectManager.getPalette(0))
+
+        binding.paletteNavigation.setOnItemSelectedListener { item: MenuItem ->
+            adapter.submitPaletteList(projectManager.getPalette(item.itemId))
+            binding.paletteText.text = "Palette"
+            binding.title.text = item.title
+            replaceListViewAdapter(adapter)
+            if (fab != null) {
+                fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.folder_outline))
+                TooltipCompat.setTooltipText(fab, "Layouts")
+            }
+            true
         }
+        replaceListViewAdapter(adapter)
 
-        return true
-      }
-
-      R.id.export_as_image -> {
-        if (binding.editorLayout.getChildAt(0) != null) showSaveMessage(
-          Utils.saveBitmapAsImageToGallery(
-            this, createBitmapFromView(binding.editorLayout), project.name
-          )
-        )
-        else make(binding.root, "Add some views...")
-          .setFadeAnimation()
-          .setType(SBUtils.Type.INFO)
-          .show()
-        return true
-      }
-
-      R.id.import_xml -> {
-        MaterialAlertDialogBuilder(this@EditorActivity)
-          .setTitle(string.note)
-          .setMessage(
-            "*Be aware it will fail to import when you try to import the layout file with view, different from LayoutEditor view set!")
-          .setCancelable(false)
-          .setNegativeButton(string.cancel) { d, _ -> d.cancel() }
-          .setPositiveButton(string.okay) { _, _ -> xmlPicker!!.launch("text/xml") }
-          .show()
-        return true
-      }
-
-      else -> return false
-    }
-  }
-
-  override fun onConfigurationChanged(config: Configuration) {
-    super.onConfigurationChanged(config)
-    actionBarDrawerToggle!!.onConfigurationChanged(config)
-    undoRedo!!.updateButtons()
-  }
-
-  override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
-    actionBarDrawerToggle!!.syncState()
-    if (undoRedo != null) undoRedo!!.updateButtons()
-  }
-
-  override fun onResume() {
-    super.onResume()
-    project.drawables?.let {
-      DrawableManager.loadFromFiles(it)
-    }
-    if (undoRedo != null) undoRedo!!.updateButtons()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-//    binding = null
-    projectManager.closeProject()
-  }
-
-  private fun showXml() {
-    val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
-    if (result.isEmpty()) {
-      showNothingDialog()
-    } else {
-      startActivity(
-        Intent(this, ShowXMLActivity::class.java).putExtra(ShowXMLActivity.EXTRA_KEY_XML, result)
-      )
-    }
-  }
-
-  private fun showNothingDialog() {
-    MaterialAlertDialogBuilder(this)
-      .setTitle(string.nothing)
-      .setMessage(string.msg_add_some_widgets)
-      .setPositiveButton(string.okay) { d, _ -> d.cancel() }
-      .show()
-  }
-
-  @SuppressLint("RestrictedApi")
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    if (menu is MenuBuilder) menu.setOptionalIconsVisible(true)
-
-    menuInflater.inflate(R.menu.menu_editor, menu)
-    val undo = menu.findItem(R.id.undo)
-    val redo = menu.findItem(R.id.redo)
-    undoRedo = UndoRedoManager(undo, redo)
-    binding.editorLayout.bindUndoRedoManager(undoRedo)
-    binding.editorLayout.updateUndoRedoHistory()
-    updateUndoRedoBtnState()
-    return super.onCreateOptionsMenu(menu)
-  }
-
-  private fun updateUndoRedoBtnState() {
-    Handler(Looper.getMainLooper()).postDelayed(updateMenuIconsState, 10)
-  }
-
-  private fun showSaveMessage(success: Boolean) {
-    if (success) make(binding.root, "Saved to gallery.")
-      .setFadeAnimation()
-      .setType(SBUtils.Type.INFO)
-      .show()
-    else make(binding.root, "Failed to save...")
-      .setFadeAnimation()
-      .setType(SBUtils.Type.ERROR)
-      .show()
-  }
-
-  private fun setToolbarButtonOnClickListener(binding: ActivityLayoutEditorBinding) {
-    TooltipCompat.setTooltipText(binding.viewType, "View Type")
-    TooltipCompat.setTooltipText(binding.deviceSize, "Size")
-    binding.viewType.setOnClickListener { view ->
-      val popupMenu = PopupMenu(view.context, view)
-      popupMenu.inflate(R.menu.menu_view_type)
-      popupMenu.setOnMenuItemClickListener {
-        val id = it.itemId
-        when (id) {
-          R.id.view_type_design -> {
-            binding.editorLayout.viewType = DesignEditor.ViewType.DESIGN
-          }
-
-          R.id.view_type_blueprint -> {
-            binding.editorLayout.viewType = DesignEditor.ViewType.BLUEPRINT
-          }
+        fab?.setOnClickListener {
+            if (binding.listView.adapter is LayoutListAdapter) {
+                createLayout()
+            } else {
+                replaceListViewAdapter(layoutAdapter)
+                binding.title.text = getString(string.layouts)
+                binding.paletteText.text = project.name
+                // binding.paletteNavigation.getMenu().getItem(binding.paletteNavigation.getSelectedItemId()).setChecked(false);
+                fab.setImageResource(R.drawable.plus)
+                TooltipCompat.setTooltipText(fab, "Create new layout")
+            }
         }
-        true
-      }
-      popupMenu.show()
+        clear()
     }
-    binding.deviceSize.setOnClickListener {
-      val popupMenu = PopupMenu(it.context, it)
-      popupMenu.inflate(R.menu.menu_device_size)
-      popupMenu.setOnMenuItemClickListener { item ->
+
+    private fun replaceListViewAdapter(adapter: RecyclerView.Adapter<*>) {
+        binding.listView.adapter = adapter
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
+        undoRedo!!.updateButtons()
+        if (actionBarDrawerToggle!!.onOptionsItemSelected(item)) return true
         when (id) {
-          R.id.device_size_small -> {
-            binding.editorLayout.resizeLayout(DeviceConfiguration(DeviceSize.SMALL))
-          }
+            android.R.id.home -> {
+                drawerLayout.openDrawer(GravityCompat.START)
+                return true
+            }
 
-          R.id.device_size_medium -> {
-            binding.editorLayout.resizeLayout(DeviceConfiguration(DeviceSize.MEDIUM))
-          }
+            R.id.undo -> {
+                binding.editorLayout.undo()
+                return true
+            }
 
-          R.id.device_size_large -> {
-            binding.editorLayout.resizeLayout(DeviceConfiguration(DeviceSize.LARGE))
-          }
+            R.id.redo -> {
+                binding.editorLayout.redo()
+                return true
+            }
+
+            R.id.show_structure -> {
+                drawerLayout.openDrawer(GravityCompat.END)
+                return true
+            }
+
+            R.id.edit_xml -> {
+                showXml()
+                return true
+            }
+
+            R.id.resources_manager -> {
+                startActivity(
+                    Intent(this, ResourceManagerActivity::class.java)
+                        .putExtra(Constants.EXTRA_KEY_PROJECT, project)
+                )
+                return true
+            }
+
+            R.id.preview -> {
+                val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+                if (result.isEmpty()) showNothingDialog()
+                else {
+                    saveXml()
+                    startActivity(
+                        Intent(this, PreviewLayoutActivity::class.java)
+                            .putExtra(Constants.EXTRA_KEY_LAYOUT, project.currentLayout)
+                    )
+                }
+                return true
+            }
+
+            R.id.export_xml -> {
+                val uri = Uri.fromFile(File(project.currentLayout.path))
+                val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+
+                if (FileUtil.saveFile(this@EditorActivity, uri, result)) {
+                    make(binding.root, "Success!").setSlideAnimation().showAsSuccess()
+                } else {
+                    make(binding.root, "Failed to save!")
+                        .setSlideAnimation()
+                        .showAsError()
+                    FileUtil.deleteFile(FileUtil.convertUriToFilePath(this@EditorActivity, uri))
+                }
+
+                return true
+            }
+
+            R.id.export_as_image -> {
+                if (binding.editorLayout.getChildAt(0) != null) showSaveMessage(
+                    Utils.saveBitmapAsImageToGallery(
+                        this, createBitmapFromView(binding.editorLayout), project.name
+                    )
+                )
+                else make(binding.root, "Add some views...")
+                    .setFadeAnimation()
+                    .setType(SBUtils.Type.INFO)
+                    .show()
+                return true
+            }
+
+            R.id.import_xml -> {
+                MaterialAlertDialogBuilder(this@EditorActivity)
+                    .setTitle(string.note)
+                    .setMessage(
+                        "*Be aware it will fail to import when you try to import the layout file with view, different from LayoutEditor view set!"
+                    )
+                    .setCancelable(false)
+                    .setNegativeButton(string.cancel) { d, _ -> d.cancel() }
+                    .setPositiveButton(string.okay) { _, _ -> xmlPicker!!.launch("text/xml") }
+                    .show()
+                return true
+            }
+
+            R.id.save_xml -> {
+                MaterialAlertDialogBuilder(this@EditorActivity)
+                    .setTitle(string.save)
+                    .setMessage(string.save_layout_message)
+                    .setCancelable(false)
+                    .setNeutralButton(string.cancel) { d, _ ->
+                        d.cancel()
+                    }
+                    .setNegativeButton(string.export_as_image) { d, _ ->
+                        if (binding.editorLayout.getChildAt(0) != null) showSaveMessage(
+                            Utils.saveBitmapAsImageToGallery(
+                                this, createBitmapFromView(binding.editorLayout), project.name
+                            )
+                        )
+                        else make(binding.root, "Add some views...")
+                            .setFadeAnimation()
+                            .setType(SBUtils.Type.INFO)
+                            .show()
+                    }
+                    .setPositiveButton(string.export_layout) { _, _ ->
+                        val uri = Uri.fromFile(File(project.currentLayout.path))
+                        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+
+                        if (FileUtil.saveFile(this@EditorActivity, uri, result)) {
+                            make(binding.root, "Success!").setSlideAnimation().showAsSuccess()
+                        } else {
+                            make(binding.root, "Failed to save!")
+                                .setSlideAnimation()
+                                .showAsError()
+                            FileUtil.deleteFile(
+                                FileUtil.convertUriToFilePath(
+                                    this@EditorActivity,
+                                    uri
+                                )
+                            )
+                        }
+                    }
+                    .show()
+                return true
+            }
+
+            else -> return false
         }
-        true
-      }
-      popupMenu.show()
-    }
-  }
-
-  private fun createAndOpenNewDesignLayout(name: String, layoutContent: String?) {
-    val layoutFile = LayoutFile(project.layoutPath + name, project.layoutDesignPath + name)
-    layoutFile.deleteDesignLayout()
-    layoutFile.saveLayout(layoutContent)
-    openLayout(layoutFile)
-  }
-
-  private fun openLayout(layoutFile: LayoutFile) {
-    binding.editorLayout.loadLayoutFromParser(layoutFile.readDesignFile())
-    project.currentLayout = layoutFile
-    project.currentLayoutDesign = layoutFile
-    supportActionBar!!.subtitle = layoutFile.name
-    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-      drawerLayout.closeDrawer(GravityCompat.START)
-    }
-    make(binding.root, "Loaded!")
-      .setFadeAnimation()
-      .setType(SBUtils.Type.INFO)
-      .show()
-  }
-
-  @SuppressLint("RestrictedApi", "SetTextI18n")
-  fun createLayout() {
-    val builder = MaterialAlertDialogBuilder(this)
-    builder.setTitle(string.create_layout)
-
-    val bind: TextinputlayoutBinding =
-      TextinputlayoutBinding.inflate(builder.create().layoutInflater)
-    val editText: TextInputEditText = bind.textinputEdittext
-    val inputLayout: TextInputLayout = bind.textinputLayout
-
-    inputLayout.suffixText = ".xml"
-
-    @Suppress("DEPRECATION")
-    builder.setView(bind.getRoot(), 10, 10, 10, 10)
-    builder.setNegativeButton(
-      string.cancel
-    ) { _, _ -> }
-    builder.setPositiveButton(string.create) { _, _ ->
-      createAndOpenNewDesignLayout(
-        "${editText.getText().toString().replace(" ", "_").lowercase()}.xml", ""
-      )
     }
 
-    val dialog: AlertDialog = builder.create()
-    dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-    dialog.show()
+    override fun onConfigurationChanged(config: Configuration) {
+        super.onConfigurationChanged(config)
+        actionBarDrawerToggle!!.onConfigurationChanged(config)
+        undoRedo!!.updateButtons()
+    }
 
-    inputLayout.setHint(string.msg_new_layout_name)
-    editText.setText("layout_new")
-    editText.addTextChangedListener(
-      object : TextWatcher {
-        override fun beforeTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {}
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        actionBarDrawerToggle!!.syncState()
+        if (undoRedo != null) undoRedo!!.updateButtons()
+    }
 
-        override fun onTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {
-          NameErrorChecker.checkForLayouts(
+    override fun onResume() {
+        super.onResume()
+        project.drawables?.let {
+            DrawableManager.loadFromFiles(it)
+        }
+        if (undoRedo != null) undoRedo!!.updateButtons()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//    binding = null
+        projectManager.closeProject()
+    }
+
+    private fun showXml() {
+        val result = XmlLayoutGenerator().generate(binding.editorLayout, true)
+        if (result.isEmpty()) {
+            showNothingDialog()
+        } else {
+            startActivity(
+                Intent(this, ShowXMLActivity::class.java).putExtra(
+                    ShowXMLActivity.EXTRA_KEY_XML,
+                    result
+                )
+            )
+        }
+    }
+
+    private fun showNothingDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(string.nothing)
+            .setMessage(string.msg_add_some_widgets)
+            .setPositiveButton(string.okay) { d, _ -> d.cancel() }
+            .show()
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (menu is MenuBuilder) menu.setOptionalIconsVisible(true)
+
+        menuInflater.inflate(R.menu.menu_editor, menu)
+        val undo = menu.findItem(R.id.undo)
+        val redo = menu.findItem(R.id.redo)
+        undoRedo = UndoRedoManager(undo, redo)
+        binding.editorLayout.bindUndoRedoManager(undoRedo)
+        binding.editorLayout.updateUndoRedoHistory()
+        updateUndoRedoBtnState()
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun updateUndoRedoBtnState() {
+        Handler(Looper.getMainLooper()).postDelayed(updateMenuIconsState, 10)
+    }
+
+    private fun showSaveMessage(success: Boolean) {
+        if (success) make(binding.root, "Saved to gallery.")
+            .setFadeAnimation()
+            .setType(SBUtils.Type.INFO)
+            .show()
+        else make(binding.root, "Failed to save...")
+            .setFadeAnimation()
+            .setType(SBUtils.Type.ERROR)
+            .show()
+    }
+
+    private fun setToolbarButtonOnClickListener(binding: ActivityLayoutEditorBinding) {
+        TooltipCompat.setTooltipText(binding.viewType, "View Type")
+        TooltipCompat.setTooltipText(binding.deviceSize, "Size")
+        binding.viewType.setOnClickListener { view ->
+            val popupMenu = PopupMenu(view.context, view)
+            popupMenu.inflate(R.menu.menu_view_type)
+            popupMenu.setOnMenuItemClickListener {
+                val id = it.itemId
+                when (id) {
+                    R.id.view_type_design -> {
+                        binding.editorLayout.viewType = DesignEditor.ViewType.DESIGN
+                    }
+
+                    R.id.view_type_blueprint -> {
+                        binding.editorLayout.viewType = DesignEditor.ViewType.BLUEPRINT
+                    }
+                }
+                true
+            }
+            popupMenu.show()
+        }
+        binding.deviceSize.setOnClickListener {
+            val popupMenu = PopupMenu(it.context, it)
+            popupMenu.inflate(R.menu.menu_device_size)
+            popupMenu.setOnMenuItemClickListener { item ->
+                val id = item.itemId
+                when (id) {
+                    R.id.device_size_small -> {
+                        binding.editorLayout.resizeLayout(DeviceConfiguration(DeviceSize.SMALL))
+                    }
+
+                    R.id.device_size_medium -> {
+                        binding.editorLayout.resizeLayout(DeviceConfiguration(DeviceSize.MEDIUM))
+                    }
+
+                    R.id.device_size_large -> {
+                        binding.editorLayout.resizeLayout(DeviceConfiguration(DeviceSize.LARGE))
+                    }
+                }
+                true
+            }
+            popupMenu.show()
+        }
+    }
+
+    private fun createAndOpenNewDesignLayout(name: String, layoutContent: String?) {
+        val layoutFile = LayoutFile(project.layoutPath + name, project.layoutDesignPath + name)
+        layoutFile.deleteDesignLayout()
+        layoutFile.saveLayout(layoutContent)
+        openLayout(layoutFile)
+    }
+
+    private fun openLayout(layoutFile: LayoutFile) {
+        binding.editorLayout.loadLayoutFromParser(layoutFile.readDesignFile())
+        project.currentLayout = layoutFile
+        project.currentLayoutDesign = layoutFile
+        supportActionBar!!.subtitle = layoutFile.name
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        make(binding.root, "Loaded!")
+            .setFadeAnimation()
+            .setType(SBUtils.Type.INFO)
+            .show()
+    }
+
+    @SuppressLint("RestrictedApi", "SetTextI18n")
+    fun createLayout() {
+        val builder = MaterialAlertDialogBuilder(this)
+        builder.setTitle(string.create_layout)
+
+        val bind: TextinputlayoutBinding =
+            TextinputlayoutBinding.inflate(builder.create().layoutInflater)
+        val editText: TextInputEditText = bind.textinputEdittext
+        val inputLayout: TextInputLayout = bind.textinputLayout
+
+        inputLayout.suffixText = ".xml"
+
+        @Suppress("DEPRECATION")
+        builder.setView(bind.getRoot(), 10, 10, 10, 10)
+        builder.setNegativeButton(
+            string.cancel
+        ) { _, _ -> }
+        builder.setPositiveButton(string.create) { _, _ ->
+            createAndOpenNewDesignLayout(
+                "${editText.getText().toString().replace(" ", "_").lowercase()}.xml", ""
+            )
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
+
+        inputLayout.setHint(string.msg_new_layout_name)
+        editText.setText("layout_new")
+        editText.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {}
+
+                override fun onTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {
+                    NameErrorChecker.checkForLayouts(
+                        editText.text.toString(),
+                        inputLayout,
+                        dialog,
+                        project.allLayouts,
+                        -1
+                    )
+                }
+
+                override fun afterTextChanged(p1: Editable) {}
+            })
+
+        editText.requestFocus()
+
+        val inputMethodManager =
+            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+
+        if (editText.text.toString().isEmpty()) {
+            editText.setSelection(0, editText.text.toString().length)
+        }
+
+        NameErrorChecker.checkForLayouts(
             editText.text.toString(),
             inputLayout,
             dialog,
             project.allLayouts,
             -1
-          )
+        )
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun renameLayout(pos: Int) {
+        val layouts = project.allLayouts
+        val builder = MaterialAlertDialogBuilder(this)
+        builder.setTitle(string.rename_layout)
+        val bind: TextinputlayoutBinding =
+            TextinputlayoutBinding.inflate(builder.create().layoutInflater)
+        val editText: TextInputEditText = bind.textinputEdittext
+        val inputLayout: TextInputLayout = bind.textinputLayout
+
+        inputLayout.suffixText = ".xml"
+
+        editText.setText(layouts[pos].name.substring(0, layouts[pos].name.lastIndexOf(".")))
+        inputLayout.setHint(string.msg_new_layout_name)
+
+        val padding = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            10f,
+            resources.displayMetrics
+        ).toInt()
+
+        @Suppress("DEPRECATION")
+        builder.setView(bind.getRoot(), padding, padding, padding, padding)
+        builder.setNegativeButton(
+            string.cancel
+        ) { _, _ -> }
+        builder.setPositiveButton(
+            string.rename
+        ) { _, _ ->
+            val designPath: String = layouts[pos].designPath
+            val path: String = layouts[pos].path
+            renameLayout(designPath, editText, layouts, pos)
+            renameLayout(path, editText, layouts, pos)
         }
 
-        override fun afterTextChanged(p1: Editable) {}
-      })
+        val dialog: AlertDialog = builder.create()
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
 
-    editText.requestFocus()
+        editText.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {}
 
-    val inputMethodManager =
-      getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+                override fun onTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {
+                    NameErrorChecker.checkForLayouts(
+                        editText.text.toString(),
+                        inputLayout,
+                        dialog,
+                        project.allLayouts,
+                        pos
+                    )
+                }
 
-    if (editText.text.toString().isEmpty()) {
-      editText.setSelection(0, editText.text.toString().length)
-    }
+                override fun afterTextChanged(p1: Editable) {}
+            })
 
-    NameErrorChecker.checkForLayouts(
-      editText.text.toString(),
-      inputLayout,
-      dialog,
-      project.allLayouts,
-      -1
-    )
-  }
-
-  @SuppressLint("RestrictedApi")
-  private fun renameLayout(pos: Int) {
-    val layouts = project.allLayouts
-    val builder = MaterialAlertDialogBuilder(this)
-    builder.setTitle(string.rename_layout)
-    val bind: TextinputlayoutBinding =
-      TextinputlayoutBinding.inflate(builder.create().layoutInflater)
-    val editText: TextInputEditText = bind.textinputEdittext
-    val inputLayout: TextInputLayout = bind.textinputLayout
-
-    inputLayout.suffixText = ".xml"
-
-    editText.setText(layouts[pos].name.substring(0, layouts[pos].name.lastIndexOf(".")))
-    inputLayout.setHint(string.msg_new_layout_name)
-
-    val padding = TypedValue.applyDimension(
-      TypedValue.COMPLEX_UNIT_DIP,
-      10f,
-      resources.displayMetrics
-    ).toInt()
-
-    @Suppress("DEPRECATION")
-    builder.setView(bind.getRoot(), padding, padding, padding, padding)
-    builder.setNegativeButton(
-      string.cancel
-    ) { _, _ -> }
-    builder.setPositiveButton(
-      string.rename
-    ) { _, _ ->
-      val designPath: String = layouts[pos].designPath
-      val path: String = layouts[pos].path
-      renameLayout(designPath, editText, layouts, pos)
-      renameLayout(path, editText, layouts, pos)
-    }
-
-    val dialog: AlertDialog = builder.create()
-    dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-    dialog.show()
-
-    editText.addTextChangedListener(
-      object : TextWatcher {
-        override fun beforeTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {}
-
-        override fun onTextChanged(p1: CharSequence, p2: Int, p3: Int, p4: Int) {
-          NameErrorChecker.checkForLayouts(
+        NameErrorChecker.checkForLayouts(
             editText.text.toString(),
             inputLayout,
             dialog,
             project.allLayouts,
             pos
-          )
+        )
+
+        editText.requestFocus()
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+
+        if (editText.text.toString().isNotEmpty()) {
+            editText.setSelection(0, editText.text.toString().length)
+        }
+    }
+
+    private fun renameLayout(
+        path: String,
+        editText: TextInputEditText,
+        layouts: MutableList<LayoutFile>, pos: Int,
+    ) {
+        val newPath = "${path.substring(0, path.lastIndexOf("/"))}/${
+            editText.text.toString().replace(" ", "_").lowercase()
+        }.xml"
+        layouts[pos].rename(newPath, "test")
+        if (layouts[pos] === project.currentLayout) openLayout(layouts[pos])
+        layoutAdapter.notifyItemChanged(pos)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun deleteLayout(pos: Int) {
+        val layouts = project.allLayouts
+        val builder = MaterialAlertDialogBuilder(this)
+        builder.setTitle(string.delete_layout)
+        builder.setMessage(string.msg_delete_layout)
+        builder.setNegativeButton(
+            string.no
+        ) { d, _ -> d.dismiss() }
+        builder.setPositiveButton(
+            string.yes
+        ) { _, _ ->
+            if (layouts[pos].designPath == project.mainLayout.designPath) {
+                ToastUtils.showShort("You can't delete main layout.")
+                return@setPositiveButton
+            }
+            FileUtil.deleteFile(layouts[pos].designPath)
+            if (layouts[pos] === project.currentLayout) openLayout(project.mainLayout)
+            layouts.remove(layouts[pos])
+            layoutAdapter.notifyItemRemoved(pos)
         }
 
-        override fun afterTextChanged(p1: Editable) {}
-      })
-
-    NameErrorChecker.checkForLayouts(
-      editText.text.toString(),
-      inputLayout,
-      dialog,
-      project.allLayouts,
-      pos
-    )
-
-    editText.requestFocus()
-    val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-
-    if (editText.text.toString().isNotEmpty()) {
-      editText.setSelection(0, editText.text.toString().length)
-    }
-  }
-
-  private fun renameLayout(path: String,
-    editText: TextInputEditText,
-    layouts: MutableList<LayoutFile>, pos: Int) {
-    val newPath = "${path.substring(0, path.lastIndexOf("/"))}/${
-      editText.text.toString().replace(" ", "_").lowercase()
-    }.xml"
-    layouts[pos].rename(newPath, "test")
-    if (layouts[pos] === project.currentLayout) openLayout(layouts[pos])
-    layoutAdapter.notifyItemChanged(pos)
-  }
-
-  @SuppressLint("NotifyDataSetChanged")
-  fun deleteLayout(pos: Int) {
-    val layouts = project.allLayouts
-    val builder = MaterialAlertDialogBuilder(this)
-    builder.setTitle(string.delete_layout)
-    builder.setMessage(string.msg_delete_layout)
-    builder.setNegativeButton(
-      string.no
-    ) { d, _ -> d.dismiss() }
-    builder.setPositiveButton(
-      string.yes
-    ) { _, _ ->
-      if (layouts[pos].designPath == project.mainLayout.designPath) {
-        ToastUtils.showShort("You can't delete main layout.")
-        return@setPositiveButton
-      }
-      FileUtil.deleteFile(layouts[pos].designPath)
-      if (layouts[pos] === project.currentLayout) openLayout(project.mainLayout)
-      layouts.remove(layouts[pos])
-      layoutAdapter.notifyItemRemoved(pos)
+        builder.create().show()
     }
 
-    builder.create().show()
-  }
+    private fun showLayoutListOptions(v: View, pos: Int) {
+        val popupMenu = PopupMenu(v.context, v)
+        popupMenu.inflate(R.menu.menu_layout_file_options)
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            val id = item.itemId
+            when (id) {
+                R.id.menu_delete_layout -> {
+                    deleteLayout(pos)
+                    true
+                }
 
-  private fun showLayoutListOptions(v: View, pos: Int) {
-    val popupMenu = PopupMenu(v.context, v)
-    popupMenu.inflate(R.menu.menu_layout_file_options)
-    popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-      val id = item.itemId
-      when (id) {
-        R.id.menu_delete_layout -> {
-          deleteLayout(pos)
-          true
+                R.id.menu_rename_layout -> {
+                    renameLayout(pos)
+                    true
+                }
+
+                else -> false
+            }
         }
 
-        R.id.menu_rename_layout -> {
-          renameLayout(pos)
-          true
+        popupMenu.show()
+    }
+
+    private fun saveXml() {
+        if (binding.editorLayout.childCount == 0) {
+            project.currentLayout.saveLayout("")
+            ToastUtils.showShort(getString(string.layout_saved))
+            return
         }
 
-        else -> false
-      }
+        val result = XmlLayoutGenerator().generate(binding.editorLayout, false)
+        project.currentLayout.saveLayout(result)
+        ToastUtils.showShort(getString(string.layout_saved))
     }
 
-    popupMenu.show()
-  }
+    companion object {
 
-  private fun saveXml() {
-    if (binding.editorLayout.childCount == 0) {
-      project.currentLayout.saveLayout("")
-      ToastUtils.showShort(getString(string.layout_saved))
-      return
+        const val ACTION_OPEN: String = "com.itsvks.layouteditor.open"
     }
-
-    val result = XmlLayoutGenerator().generate(binding.editorLayout, false)
-    project.currentLayout.saveLayout(result)
-    ToastUtils.showShort(getString(string.layout_saved))
-  }
-
-  companion object {
-
-    const val ACTION_OPEN: String = "com.itsvks.layouteditor.open"
-  }
 }
