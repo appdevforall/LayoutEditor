@@ -444,6 +444,7 @@ class EditorActivity : BaseActivity() {
             }
 
             R.id.save_xml -> {
+
                 MaterialAlertDialogBuilder(this@EditorActivity)
                     .setTitle(string.save)
                     .setMessage(string.save_layout_message)
