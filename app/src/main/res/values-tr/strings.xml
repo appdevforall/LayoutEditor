@@ -134,4 +134,5 @@
   <string name="msg_symbol_not_allowed">Ad sembol içermemelidir.</string>
   <string name="title_save_layout">Düzeni kaydet</string>
   <string name="msg_save_layout">Düzeni kaydetmek istiyor musunuz?</string>
+    <string name="save_layout_message" >Düzeni mi yoksa görüntüyü mi dışa aktarmak istiyorsunuz?</string>
 </resources>
